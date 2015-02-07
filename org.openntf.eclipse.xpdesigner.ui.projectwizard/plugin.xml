@@ -10,6 +10,8 @@
       <wizard
             category="org.openntf.eclipse.xpdesigner.ui.projectwizard.cat"
             class="org.openntf.eclipse.xpdesigner.ui.projectwizard.wizard.NewXPProject"
+            descriptionImage="icons/wizban/xsp_project_wiz.gif"
+            finalPerspective="org.openntf.eclipse.xpdesigner.ui.projectwizard.perspective"
             icon="icons/view16/xsp_icon_view.gif"
             id="org.openntf.eclipse.xpdesigner.ui.projectwizard.newxproject"
             name="XPages Project"
@@ -74,6 +76,15 @@
                relative="org.eclipse.ui.editorss">
          </view>
       </perspectiveExtension>
+   </extension>
+   <extension
+         id="org.openntf.eclipse.xpdesigner.project"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.openntf.eclipse.xpdesigner.ui.natures.ProjectNature">
+         </run>
+      </runtime>
    </extension>
 
 </plugin>
