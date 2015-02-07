@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="org.openntf.eclipse.xpdesigner.ui.projectwizard.cat"
+            name="XPages">
+      </category>
+      <wizard
+            category="org.openntf.eclipse.xpdesigner.ui.projectwizard.cat"
+            class="org.openntf.eclipse.xpdesigner.ui.projectwizard.wizard.NewXPProject"
+            icon="icons/view16/xsp_icon_view.gif"
+            id="org.openntf.eclipse.xpdesigner.ui.projectwizard.newxproject"
+            name="XPages Project"
+            project="true">
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.eclipse.ui.navigator.CommonNavigator"
+            icon="icons/view16/xsp_icon_view.gif"
+            id="org.openntf.xpdesigner.ui.navigator"
+            name="XPages Navigator">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewerActionBinding
+            viewerId="org.openntf.xpdesigner.ui.navigator">
+         <includes>
+            <actionExtension
+                  pattern="org.eclipse.ui.navigator.resources.*">
+            </actionExtension>
+         </includes>
+      </viewerActionBinding>
+      <viewerContentBinding
+            viewerId="org.openntf.xpdesigner.ui.navigator">
+         <includes>
+            <contentExtension
+                  pattern="org.eclipse.ui.navigator.resourceContent">
+            </contentExtension>
+            <contentExtension
+                  pattern="org.eclipse.ui.navigator.resources.filters.*">
+            </contentExtension>
+            <contentExtension
+                  pattern="org.eclipse.ui.navigator.resources.linkHelper">
+            </contentExtension>
+            <contentExtension
+                  pattern="org.eclipse.ui.navigator.resources.workingSets">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.openntf.eclipse.xpdesigner.ui.projectwizard.PerspectiveFactory"
+            icon="icons/view16/xsp_icon_view.gif"
+            id="org.openntf.eclipse.xpdesigner.ui.projectwizard.perspective"
+            name="XPages Perspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.openntf.eclipse.xpdesigner.ui.projectwizard.perspective">
+         <view
+               id="org.openntf.xpdesigner.ui.navigator"
+               minimized="false"
+               ratio="0.25"
+               relationship="left"
+               relative="org.eclipse.ui.editorss">
+         </view>
+      </perspectiveExtension>
+   </extension>
+
+</plugin>
