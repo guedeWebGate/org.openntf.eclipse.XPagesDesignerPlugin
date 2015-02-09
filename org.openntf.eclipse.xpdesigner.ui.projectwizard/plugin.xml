@@ -65,19 +65,6 @@
       </perspective>
    </extension>
    <extension
-         point="org.eclipse.ui.perspectiveExtensions">
-      <perspectiveExtension
-            targetID="org.openntf.eclipse.xpdesigner.ui.projectwizard.perspective">
-         <view
-               id="org.openntf.xpdesigner.ui.navigator"
-               minimized="false"
-               ratio="0.25"
-               relationship="left"
-               relative="org.eclipse.ui.editorss">
-         </view>
-      </perspectiveExtension>
-   </extension>
-   <extension
          id="org.openntf.eclipse.xpdesigner.project"
          point="org.eclipse.core.resources.natures">
       <runtime>
