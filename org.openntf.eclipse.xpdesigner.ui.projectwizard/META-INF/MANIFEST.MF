@@ -21,3 +21,5 @@ Require-Bundle: org.eclipse.ui,
  com.ibm.xsp.extlib
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ lib/commons-io-2.4.jar

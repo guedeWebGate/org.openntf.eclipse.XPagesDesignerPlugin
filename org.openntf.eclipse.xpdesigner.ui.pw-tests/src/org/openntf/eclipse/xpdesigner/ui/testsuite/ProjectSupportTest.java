@@ -7,6 +7,8 @@ import java.net.URISyntaxException;
  
 
 
+import java.util.ArrayList;
+
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
@@ -18,6 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Test;
  
+import org.openntf.eclipse.xpdesigner.core.xspcomponents.XSPLibrary;
 import org.openntf.eclipse.xpdesigner.ui.natures.ProjectNature;
 import org.openntf.eclipse.xpdesigner.ui.projectwizard.XPagesProjectSupport;
  
@@ -68,7 +71,7 @@ public class ProjectSupportTest {
     @SuppressWarnings("nls")
     private void assertProjectDotFileAndStructureAndNatureExist(String projectPath, String name, URI location) throws DocumentException,
             CoreException {
-        IProject project = XPagesProjectSupport.createProject(name, location);
+        IProject project = XPagesProjectSupport.createProject(name, location, new ArrayList<XSPLibrary>());
  
         String projectFilePath = projectPath + "/" + ".project";
         String[] emptyNodes = { "/projectDescription/comment", "/projectDescription/projects", "/projectDescription/buildSpec" };
@@ -136,7 +139,7 @@ public class ProjectSupportTest {
     private void assertCreateProjectWithBadNameArg(String name) {
         URI location = null;
         try {
-            XPagesProjectSupport.createProject(name, location);
+            XPagesProjectSupport.createProject(name, location,new ArrayList<XSPLibrary>());
             Assert.fail("The call to CustomProjectSupport.createProject() did not fail!"); //$NON-NLS-1$
         } catch (AssertionFailedException e) {
             // An exception was thrown as expected; the test passed.

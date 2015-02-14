@@ -1,9 +1,14 @@
 package org.openntf.eclipse.xpdesigner.ui.projectwizard;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -22,10 +27,13 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.environments.IExecutionEnvironment;
 import org.eclipse.jdt.launching.environments.IExecutionEnvironmentsManager;
+import org.eclipse.pde.core.build.IBuildEntry;
+import org.eclipse.pde.core.build.IBuildModelFactory;
 import org.eclipse.pde.core.plugin.IPlugin;
 import org.eclipse.pde.core.plugin.IPluginBase;
 import org.eclipse.pde.core.plugin.IPluginImport;
 import org.eclipse.pde.internal.core.TargetPlatformHelper;
+import org.eclipse.pde.internal.core.build.WorkspaceBuildModel;
 import org.eclipse.pde.internal.core.bundle.WorkspaceBundlePluginModel;
 import org.eclipse.pde.internal.core.ibundle.IBundlePluginBase;
 import org.openntf.eclipse.xpdesigner.core.xspcomponents.XSPLibrary;
@@ -42,6 +50,7 @@ public class XPagesProjectSupport {
 	 * @param location
 	 * @param natureId
 	 * @return
+	 * @throws IOException
 	 */
 	public static IProject createProject(String projectName, URI location, List<XSPLibrary> libs) {
 		Assert.isNotNull(projectName);
@@ -58,8 +67,13 @@ public class XPagesProjectSupport {
 			WorkspaceBundlePluginModel model = initPluginStructure(projectName, project);
 			addImports(model);
 			addSelectedExtensionLibraries(model, libs);
+			createActivator(project);
+			createBuildProperties(project);
 			model.save();
 		} catch (CoreException e) {
+			e.printStackTrace();
+			project = null;
+		} catch (IOException e) {
 			e.printStackTrace();
 			project = null;
 		}
@@ -85,6 +99,7 @@ public class XPagesProjectSupport {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private static WorkspaceBundlePluginModel initPluginStructure(String projectName, IProject project) throws CoreException {
 		IFile pluginXml = project.getFile("plugin.xml");
 		IFile manifest = project.getFile("META-INF/MANIFEST.MF");
@@ -102,8 +117,53 @@ public class XPagesProjectSupport {
 
 		IBundlePluginBase plugBundle = ((IBundlePluginBase) pluginBase);
 		plugBundle.setTargetVersion(targVersion);
+		model.getBundleModel().getBundle().setHeader(Constants.BUNDLE_ACTIVATIONPOLICY, Constants.ACTIVATION_LAZY);
+		model.getBundleModel().getBundle().setHeader(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT, "JavaSE-1.6");
 
 		return model;
+	}
+
+	private static void createActivator(IProject project) throws IOException, CoreException {
+		IFile activatorFile = project.getFile("Generated/plugin/Activator.java");
+		InputStream in = Activator.getDefault().getClass().getResourceAsStream("/resources/Activator.txt");
+		StringWriter writer = new StringWriter();
+		IOUtils.copy(in, writer, project.getDefaultCharset());
+		String code = writer.toString();
+		code.replace("###PLUGIN_ID###", project.getName());
+		ByteArrayInputStream stream = new ByteArrayInputStream(code.getBytes(project.getDefaultCharset()));
+		if (activatorFile.exists())
+			activatorFile.setContents(stream, false, true, null);
+		else
+			activatorFile.create(stream, false, null);
+		stream.close();
+
+	}
+
+	private static void createBuildProperties(IProject project) throws CoreException {
+		IFile file = project.getFile("build.properties");
+		if (!file.exists()) {
+			WorkspaceBuildModel model = new WorkspaceBuildModel(file);
+			IBuildModelFactory factory = model.getFactory();
+
+			// SOURCE..
+			IBuildEntry source = factory.createEntry("source..");
+			source.addToken("Code/Java");
+			source.addToken("Generated");
+			model.getBuild().add(source);
+
+			// BUILD..
+			IBuildEntry bin = factory.createEntry("output..");
+			bin.addToken("WebContent/META-INF/classes");
+			model.getBuild().add(bin);
+
+			// BIN.INCLUDES
+			IBuildEntry binIncludesEntry = factory.createEntry(IBuildEntry.BIN_INCLUDES);
+			binIncludesEntry.addToken("META-INF/"); //$NON-NLS-1$
+			binIncludesEntry.addToken("."); //$NON-NLS-1$
+
+			model.getBuild().add(binIncludesEntry);
+			model.save();
+		}
 	}
 
 	/**
@@ -196,7 +256,7 @@ public class XPagesProjectSupport {
 
 	private static List<IClasspathEntry> getClassPathEntries(IJavaProject javaProject, IProject project) {
 		List<IClasspathEntry> entries = new ArrayList<IClasspathEntry>();
-		entries.add(createJREEntry(null));
+		entries.add(createJREEntry("JavaSE-1.6"));
 		entries.add(JavaCore.newContainerEntry(new Path("org.eclipse.pde.core.requiredPlugins")));
 		IPath path = project.getProject().getFullPath();
 		entries.add(JavaCore.newSourceEntry(path.append("Code/Java")));
