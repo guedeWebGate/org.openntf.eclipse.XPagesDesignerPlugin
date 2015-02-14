@@ -14,6 +14,10 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.core,
  org.eclipse.pde.core,
  org.eclipse.jdt.launching,
- org.eclipse.jdt.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+ org.eclipse.jdt.ui,
+ com.ibm.commons,
+ com.ibm.xsp.core,
+ com.ibm.xsp.extsn,
+ com.ibm.xsp.extlib
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

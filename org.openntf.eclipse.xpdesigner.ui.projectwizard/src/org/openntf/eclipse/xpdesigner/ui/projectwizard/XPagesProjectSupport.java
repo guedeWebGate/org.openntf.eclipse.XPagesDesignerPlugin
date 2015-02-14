@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -21,8 +22,17 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.environments.IExecutionEnvironment;
 import org.eclipse.jdt.launching.environments.IExecutionEnvironmentsManager;
+import org.eclipse.pde.core.plugin.IPlugin;
+import org.eclipse.pde.core.plugin.IPluginBase;
+import org.eclipse.pde.core.plugin.IPluginImport;
+import org.eclipse.pde.internal.core.TargetPlatformHelper;
+import org.eclipse.pde.internal.core.bundle.WorkspaceBundlePluginModel;
+import org.eclipse.pde.internal.core.ibundle.IBundlePluginBase;
+import org.openntf.eclipse.xpdesigner.core.xspcomponents.XSPLibrary;
 import org.openntf.eclipse.xpdesigner.ui.natures.ProjectNature;
+import org.osgi.framework.Constants;
 
+@SuppressWarnings("restriction")
 public class XPagesProjectSupport {
 	/**
 	 * For this marvelous project we need to: - create the default Eclipse
@@ -33,7 +43,7 @@ public class XPagesProjectSupport {
 	 * @param natureId
 	 * @return
 	 */
-	public static IProject createProject(String projectName, URI location) {
+	public static IProject createProject(String projectName, URI location, List<XSPLibrary> libs) {
 		Assert.isNotNull(projectName);
 		Assert.isTrue(projectName.trim().length() > 0);
 
@@ -45,15 +55,55 @@ public class XPagesProjectSupport {
 			addToProjectStructure(project, paths);
 
 			setClasspath(project, "WebContent/META-INF/classes");
-			// BUILD PLUGIN XML
-			// BUILD ACTIVATOR
-
+			WorkspaceBundlePluginModel model = initPluginStructure(projectName, project);
+			addImports(model);
+			addSelectedExtensionLibraries(model, libs);
+			model.save();
 		} catch (CoreException e) {
 			e.printStackTrace();
 			project = null;
 		}
 
 		return project;
+	}
+
+	private static void addSelectedExtensionLibraries(WorkspaceBundlePluginModel model, List<XSPLibrary> libs) throws CoreException {
+		IPluginBase base = model.getPluginBase();
+		IPluginImport[] imports = base.getImports();
+		List<IPluginImport> toImport = PluginDependencyManager.INSTANCE.buildImportsDiff(libs, imports, model);
+		for (IPluginImport imp : toImport) {
+			base.add(imp);
+		}
+
+	}
+
+	private static void addImports(WorkspaceBundlePluginModel model) throws CoreException {
+		List<IPluginImport> plugs = PluginDependencyManager.INSTANCE.buildMandatoryImports(model);
+		IPluginBase base = model.getPluginBase();
+		for (IPluginImport imp : plugs) {
+			base.add(imp);
+		}
+	}
+
+	private static WorkspaceBundlePluginModel initPluginStructure(String projectName, IProject project) throws CoreException {
+		IFile pluginXml = project.getFile("plugin.xml");
+		IFile manifest = project.getFile("META-INF/MANIFEST.MF");
+		WorkspaceBundlePluginModel model = new WorkspaceBundlePluginModel(manifest, pluginXml);
+		IPluginBase pluginBase = model.getPluginBase();
+		String targVersion = TargetPlatformHelper.getTargetVersionString();
+		pluginBase.setSchemaVersion(TargetPlatformHelper.getSchemaVersionForTargetVersion(targVersion));
+		pluginBase.setId(project.getName());
+		pluginBase.setName(projectName);
+		pluginBase.setVersion("1.0.0.qualifier");
+
+		model.getBundleModel().getBundle().setHeader(Constants.BUNDLE_MANIFESTVERSION, "2");
+		IPlugin plug = (IPlugin) pluginBase;
+		plug.setClassName("plugin.Activator");
+
+		IBundlePluginBase plugBundle = ((IBundlePluginBase) pluginBase);
+		plugBundle.setTargetVersion(targVersion);
+
+		return model;
 	}
 
 	/**
@@ -149,7 +199,7 @@ public class XPagesProjectSupport {
 		entries.add(createJREEntry(null));
 		entries.add(JavaCore.newContainerEntry(new Path("org.eclipse.pde.core.requiredPlugins")));
 		IPath path = project.getProject().getFullPath();
-		entries.add(JavaCore.newSourceEntry(path.append("Java/Code")));
+		entries.add(JavaCore.newSourceEntry(path.append("Code/Java")));
 		entries.add(JavaCore.newSourceEntry(path.append("Generated")));
 		return entries;
 	}
