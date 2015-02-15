@@ -17,6 +17,15 @@
             name="XPages Project"
             project="true">
       </wizard>
+      <wizard
+            category="org.openntf.eclipse.xpdesigner.ui.projectwizard.cat"
+            class="org.openntf.eclipse.xpdesigner.ui.projectwizard.wizard.NewXPage"
+            descriptionImage="icons/wizban/xsp_page_wiz.gif"
+            finalPerspective="org.openntf.eclipse.xpdesigner.ui.projectwizard.perspective"
+            id="org.openntf.eclipse.xpdesigner.ui.projectwizard.newXPages"
+            name="XPage"
+            project="false">
+      </wizard>
    </extension>
    <extension
          point="org.eclipse.ui.views">
