@@ -1,13 +1,12 @@
 package org.openntf.eclipse.xpdesigner.ui.projectwizard.wizard;
 
-import java.util.List;
-
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.openntf.eclipse.xpdesigner.core.XPagesComponentProvider;
-import org.openntf.eclipse.xpdesigner.core.xspcomponents.XSPLibrary;
+import org.openntf.eclipse.xpdesigner.ui.projectwizard.XSPBuilder;
 
 public class NewXPage extends Wizard implements INewWizard {
 
@@ -21,29 +20,24 @@ public class NewXPage extends Wizard implements INewWizard {
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		m_Selection = selection;
+		System.out.println("Instance of IResource: "+ (selection.getFirstElement() instanceof IResource));
+		System.out.println("Instance of IAdaptable: "+ (selection.getFirstElement() instanceof IAdaptable));
+		
 
 	}
 
 	@Override
 	public boolean performFinish() {
-		// TODO Auto-generated method stub
+		String xpageName = m_PageOne.getFilename() +".xsp";
+		XSPBuilder.INSTANCE.createFile("XPages", xpageName);
 		return false;
 	}
 
 	@Override
 	public void addPages() {
-		try {
-			List<XSPLibrary> libs = XPagesComponentProvider.INSTANCE.scanPlugins4XSPLibraries();
-			for (XSPLibrary lib : libs) {
-				System.out.println(lib.getPluginID() + " --> " + lib.getClassName());
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		m_PageOne = new NewXPagePageOne("New XPage");
+		m_PageOne = new NewXPagePageOne("New XPage", m_Selection);
 		m_PageOne.setTitle("New XPage");
-		m_PageOne.setDescription("Please insert the filename");
-		
+		m_PageOne.setDescription("Create a new XPage.");		
 		addPage(m_PageOne);
 	}
 
