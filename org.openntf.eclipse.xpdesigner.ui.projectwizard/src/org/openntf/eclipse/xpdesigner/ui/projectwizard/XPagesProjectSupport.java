@@ -60,7 +60,7 @@ public class XPagesProjectSupport {
 		try {
 			addNature(project);
 
-			String[] paths = { "Code/Java", "Forms", "Views", "CustomControls", "XPages", "WebContent/META-INF/classes", "Generated/xsp", "Generated/plugin" }; //$NON-NLS-1$ //$NON-NLS-2$
+			String[] paths = { "Code/Java", "Forms", "Views", "CustomControls", "XPages", "WebContent/META-INF/classes","WebContent/js","WebContent/css", "Generated/xsp", "Generated/plugin" }; //$NON-NLS-1$ //$NON-NLS-2$
 			addToProjectStructure(project, paths);
 
 			setClasspath(project, "WebContent/META-INF/classes");

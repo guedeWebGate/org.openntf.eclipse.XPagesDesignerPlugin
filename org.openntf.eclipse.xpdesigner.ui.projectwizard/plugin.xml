@@ -26,6 +26,15 @@
             name="XPage"
             project="false">
       </wizard>
+      <wizard
+            category="org.openntf.eclipse.xpdesigner.ui.projectwizard.cat"
+            class="org.openntf.eclipse.xpdesigner.ui.projectwizard.wizard.NewCustomControl"
+            descriptionImage="icons/wizban/xsp_page_wiz.gif"
+            finalPerspective="org.openntf.eclipse.xpdesigner.ui.projectwizard.perspective"
+            id="org.openntf.eclipse.xpdesigner.ui.projectwizard.newcustomcontrol"
+            name="Custom Control"
+            project="false">
+      </wizard>
    </extension>
    <extension
          point="org.eclipse.ui.views">

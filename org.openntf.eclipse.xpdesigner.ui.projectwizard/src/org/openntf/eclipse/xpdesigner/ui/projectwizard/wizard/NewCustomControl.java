@@ -1,15 +1,17 @@
 package org.openntf.eclipse.xpdesigner.ui.projectwizard.wizard;
 
 
-public class NewXPage extends AbstractNewXSPElement {
+public class NewCustomControl extends AbstractNewXSPElement {
 
+
+	
 	@Override
 	public String getTargetFolder() {
-		return "XPages";
+		return "CustomControls";
 	}
 
 	@Override
 	public String getXSPTitle() {
-		return "XPage";
+		return "Custom Control";
 	}
 }
