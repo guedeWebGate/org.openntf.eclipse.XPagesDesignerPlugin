@@ -232,6 +232,10 @@ public class XPagesProjectSupport {
 		if (!project.hasNature("org.eclipse.pde.PluginNature")) {
 			addNatureToProject(project, "org.eclipse.pde.PluginNature");
 		}
+		
+		if (!project.hasNature("org.eclipse.wst.jsdt.core.jsNature")) {
+			addNatureToProject(project, "org.eclipse.wst.jsdt.core.jsNature");
+		}
 	}
 
 	private static void addNatureToProject(IProject project, String nature) throws CoreException {
