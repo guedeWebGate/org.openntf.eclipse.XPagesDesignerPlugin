@@ -207,5 +207,15 @@
           </viewShortcut>
       </perspectiveExtension>
     </extension>
+   <extension
+         id="org.openntf.eclipse.xpdesigner.core.XSPBuilder"
+         name="XSP Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder>
+         <run
+               class="org.openntf.eclipse.xpdesigner.core.XSPBuilder">
+         </run>
+      </builder>
+   </extension>
 
 </plugin>

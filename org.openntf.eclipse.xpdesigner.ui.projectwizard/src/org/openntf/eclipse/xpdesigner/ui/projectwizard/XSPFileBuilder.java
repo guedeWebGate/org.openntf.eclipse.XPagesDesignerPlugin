@@ -7,7 +7,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 
-public enum XSPBuilder {
+public enum XSPFileBuilder {
 	INSTANCE;
 
 	public IFile createFile(IProject project, String target, String xpageName) throws CoreException, IOException {
@@ -29,4 +29,16 @@ public enum XSPBuilder {
 		sb.append("</xp:view>");
 		return sb.toString();
 	}
+
+	public IFile createJavaFileForXSP(IProject project, String className, String content) throws CoreException, IOException {
+		IFile newFile = project.getFile("Generated/" + className.replace(".", "/") + ".java");
+		ByteArrayInputStream stream = new ByteArrayInputStream(content.getBytes(project.getDefaultCharset()));
+		if (newFile.exists())
+			newFile.setContents(stream, false, true, null);
+		else
+			newFile.create(stream, false, null);
+		stream.close();
+		return newFile;
+	}
+
 }

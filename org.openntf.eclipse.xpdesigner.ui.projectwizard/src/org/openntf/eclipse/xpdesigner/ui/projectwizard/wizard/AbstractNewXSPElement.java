@@ -13,7 +13,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.ISetSelectionTarget;
-import org.openntf.eclipse.xpdesigner.ui.projectwizard.XSPBuilder;
+import org.openntf.eclipse.xpdesigner.ui.projectwizard.XSPFileBuilder;
 
 public abstract class AbstractNewXSPElement extends Wizard implements INewWizard {
 
@@ -40,7 +40,7 @@ public abstract class AbstractNewXSPElement extends Wizard implements INewWizard
 	public boolean performFinish() {
 		String xpageName = m_PageOne.getFilename().getText();
 		try {
-			IFile file = XSPBuilder.INSTANCE.createFile(m_PageOne.getSelectedProject(), getTargetFolder(), xpageName);
+			IFile file = XSPFileBuilder.INSTANCE.createFile(m_PageOne.getSelectedProject(), getTargetFolder(), xpageName);
 			openFile(file);
 		} catch (Exception ex) {
 			ex.printStackTrace();

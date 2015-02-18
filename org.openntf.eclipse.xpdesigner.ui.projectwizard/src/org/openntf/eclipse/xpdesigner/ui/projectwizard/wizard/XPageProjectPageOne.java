@@ -37,8 +37,8 @@ public class XPageProjectPageOne extends WizardNewProjectCreationPage {
 			item.setText(lib.getLib().getLibraryId());
 			item.setData(lib);
 		}
-		m_Table.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true));
-		m_Table.setSize(500, 100);
+		m_Table.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		//m_Table.setSize(500, 100);
 	}
 
 	public List<XSPLibrary> getSelectedXSPLibraries() {
