@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PW JUnit Tests
+Bundle-SymbolicName: org.openntf.eclipse.xpdesinger.ui.pw-tests
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: WebGate Consulting AG
+Fragment-Host: org.openntf.eclipse.xpdesigner.ui.projectwizard;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.junit;bundle-version="4.11.0"
+Bundle-ClassPath: .,
+ lib/dom4j-1.6.1.jar,
+ lib/jaxen-1.1-beta-6.jar
