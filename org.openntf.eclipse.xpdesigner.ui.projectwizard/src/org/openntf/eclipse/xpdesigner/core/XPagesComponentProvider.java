@@ -139,9 +139,8 @@ public enum XPagesComponentProvider {
 	}
 
 	public FacesSharableRegistry getRegistry() {
-		if (m_Libraries == null) {
-			scanPlugins4XSPLibraries();
-		}
+
+		scanPlugins4XSPLibraries();
 		String id = "empty local registry";
 		SharableRegistryImpl reg = new SharableRegistryImpl(id);
 		reg.setRegistryType(FacesSharableRegistry.TYPE_APPLICATION);
@@ -152,7 +151,7 @@ public enum XPagesComponentProvider {
 			XspLibrary lib = library.getLib();
 			SimpleRegistryProvider provider = new SimpleRegistryProvider();
 			provider.init(new LibraryWrapper(lib.getLibraryId(), lib));
-			checkManager( provider);
+			checkManager(provider);
 			reg.addDepend(provider.getRegistry());
 		}
 		reg.refreshReferences();
@@ -160,22 +159,22 @@ public enum XPagesComponentProvider {
 	}
 
 	private void checkManager(SimpleRegistryProvider provider) {
-		for (String id: m_Manager.getRegistryProviderIds()) {
+		for (String id : m_Manager.getRegistryProviderIds()) {
 			if (id.equals(provider.getId())) {
 				return;
 			}
 		}
-		System.out.println("add "+ provider.getId() +" to XSPManager");
+		System.out.println("add " + provider.getId() + " to XSPManager");
 		m_Manager.setRegistryProvider(provider.getId(), provider);
 	}
-	
+
 	public void crawlRegistry() {
 		FacesSharableRegistry reg = getRegistry();
 		System.out.println(reg.findDefs().size());
-		for (FacesComponentDefinition def: reg.findComponentDefs()) {
-			System.out.println(def.getFirstDefaultPrefix() +":"+def.getTagName() + " "+ def.getNamespaceUri());
+		for (FacesComponentDefinition def : reg.findComponentDefs()) {
+			System.out.println(def.getFirstDefaultPrefix() + ":" + def.getTagName() + " " + def.getNamespaceUri());
 			System.out.println(def.getExtension("designer-extension"));
-			
+
 		}
 	}
 }
