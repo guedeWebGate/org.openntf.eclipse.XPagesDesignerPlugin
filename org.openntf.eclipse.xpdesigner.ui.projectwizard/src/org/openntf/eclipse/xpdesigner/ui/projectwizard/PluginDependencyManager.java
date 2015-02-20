@@ -6,7 +6,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.pde.core.plugin.IPluginImport;
 import org.eclipse.pde.internal.core.bundle.WorkspaceBundlePluginModel;
-import org.openntf.eclipse.xpdesigner.core.xspcomponents.XSPLibrary;
+import org.openntf.eclipse.xpdesigner.core.xspcomponents.XDELibrary;
 
 @SuppressWarnings("restriction")
 public enum PluginDependencyManager {
@@ -34,9 +34,9 @@ public enum PluginDependencyManager {
 		return plugins;
 	}
 
-	public List<IPluginImport> buildImportsDiff(List<XSPLibrary> libs, IPluginImport[] imports, WorkspaceBundlePluginModel model) throws CoreException {
+	public List<IPluginImport> buildImportsDiff(List<XDELibrary> libs, IPluginImport[] imports, WorkspaceBundlePluginModel model) throws CoreException {
 		List<IPluginImport> plugins = new LinkedList<IPluginImport>();
-		for (XSPLibrary lib : libs) {
+		for (XDELibrary lib : libs) {
 			if (notAllreadyAdded(imports, lib.getPluginID())) {
 				IPluginImport imp = model.getPluginFactory().createImport();
 				imp.setId(lib.getPluginID());

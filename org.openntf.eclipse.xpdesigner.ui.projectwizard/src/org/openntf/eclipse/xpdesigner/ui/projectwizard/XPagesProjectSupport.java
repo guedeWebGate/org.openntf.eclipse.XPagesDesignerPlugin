@@ -36,7 +36,7 @@ import org.eclipse.pde.internal.core.TargetPlatformHelper;
 import org.eclipse.pde.internal.core.build.WorkspaceBuildModel;
 import org.eclipse.pde.internal.core.bundle.WorkspaceBundlePluginModel;
 import org.eclipse.pde.internal.core.ibundle.IBundlePluginBase;
-import org.openntf.eclipse.xpdesigner.core.xspcomponents.XSPLibrary;
+import org.openntf.eclipse.xpdesigner.core.xspcomponents.XDELibrary;
 import org.openntf.eclipse.xpdesigner.ui.natures.ProjectNature;
 import org.osgi.framework.Constants;
 
@@ -52,7 +52,7 @@ public class XPagesProjectSupport {
 	 * @return
 	 * @throws IOException
 	 */
-	public static IProject createProject(String projectName, URI location, List<XSPLibrary> libs) {
+	public static IProject createProject(String projectName, URI location, List<XDELibrary> libs) {
 		Assert.isNotNull(projectName);
 		Assert.isTrue(projectName.trim().length() > 0);
 
@@ -81,7 +81,7 @@ public class XPagesProjectSupport {
 		return project;
 	}
 
-	private static void addSelectedExtensionLibraries(WorkspaceBundlePluginModel model, List<XSPLibrary> libs) throws CoreException {
+	private static void addSelectedExtensionLibraries(WorkspaceBundlePluginModel model, List<XDELibrary> libs) throws CoreException {
 		IPluginBase base = model.getPluginBase();
 		IPluginImport[] imports = base.getImports();
 		List<IPluginImport> toImport = PluginDependencyManager.INSTANCE.buildImportsDiff(libs, imports, model);
@@ -129,7 +129,7 @@ public class XPagesProjectSupport {
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(in, writer, project.getDefaultCharset());
 		String code = writer.toString();
-		code.replace("###PLUGIN_ID###", project.getName());
+		code = code.replace("###PLUGIN_ID###", project.getName());
 		ByteArrayInputStream stream = new ByteArrayInputStream(code.getBytes(project.getDefaultCharset()));
 		if (activatorFile.exists())
 			activatorFile.setContents(stream, false, true, null);

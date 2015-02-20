@@ -217,5 +217,35 @@
          </run>
       </builder>
    </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.openntf.eclipse.xpdesigner.ui.projectwizard.contribution1"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               id="org.openntf.eclipse.xpdesigner.ui.projectwizard.menu1"
+               label="XPages-Testing"
+               path="additions">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               class="org.openntf.eclipse.xpdesigner.ui.projectwizard.popup.actions.TestAction"
+               enablesFor="1"
+               id="org.openntf.eclipse.xpdesigner.ui.projectwizard.newAction"
+               label="A-Test"
+               menubarPath="org.openntf.eclipse.xpdesigner.ui.projectwizard.menu1/group1">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="com.ibm.xsp.core.xspRegistryAnnotater">
+      <annotater
+            class="org.openntf.eclipse.xpdesigner.core.xspcomponents.ComponentAnnotater"
+            id="org.openntf.eclipse.xpdesigner.core.xspcomponents.ComponentAnnotater"
+            name="XPages Designer Plugin Annotater">
+      </annotater>
+   </extension>
 
 </plugin>

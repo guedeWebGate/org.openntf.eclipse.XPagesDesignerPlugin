@@ -15,11 +15,12 @@ import org.eclipse.pde.core.plugin.IPluginExtension;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.core.plugin.IPluginObject;
 import org.eclipse.pde.core.plugin.PluginRegistry;
-import org.openntf.eclipse.xpdesigner.core.xspcomponents.XSPLibrary;
+import org.openntf.eclipse.xpdesigner.core.xspcomponents.XDELibrary;
 import org.osgi.framework.Bundle;
 
 import com.ibm.xsp.library.LibraryWrapper;
 import com.ibm.xsp.library.XspLibrary;
+import com.ibm.xsp.registry.FacesComponentDefinition;
 import com.ibm.xsp.registry.FacesSharableRegistry;
 import com.ibm.xsp.registry.SharableRegistryImpl;
 import com.ibm.xsp.registry.config.SimpleRegistryProvider;
@@ -28,14 +29,14 @@ import com.ibm.xsp.registry.config.XspRegistryManager;
 public enum XPagesComponentProvider {
 	INSTANCE;
 
-	private List<XSPLibrary> m_Libraries;
+	private List<XDELibrary> m_Libraries;
 	private XspRegistryManager m_Manager;
 
-	public synchronized List<XSPLibrary> scanPlugins4XSPLibraries() {
+	public synchronized List<XDELibrary> scanPlugins4XSPLibraries() {
 		System.out.println("REGMAN: " + XspRegistryManager.getManager().getRegistryProviderIds().size());
 		if (m_Libraries == null) {
 			m_Manager = XspRegistryManager.getManager();
-			List<XSPLibrary> libraries = new LinkedList<XSPLibrary>();
+			List<XDELibrary> libraries = new LinkedList<XDELibrary>();
 			IPluginModelBase[] base = PluginRegistry.getActiveModels(false);
 			for (IPluginModelBase element : base) {
 				IPluginBase pbase = element.getPluginBase();
@@ -51,7 +52,6 @@ public enum XPagesComponentProvider {
 									try {
 										Bundle bdl = Platform.getBundle(pbase.getId());
 
-										
 										try {
 											bdl.start();
 										} catch (Exception e) {
@@ -59,7 +59,7 @@ public enum XPagesComponentProvider {
 										}
 										cl = bdl.loadClass(className);
 										XspLibrary lib = (XspLibrary) cl.newInstance();
-										XSPLibrary library = new XSPLibrary(pbase.getId(), pexElement.getAttribute("class").getValue(), lib);
+										XDELibrary library = new XDELibrary(pbase.getId(), pexElement.getAttribute("class").getValue(), lib);
 										libraries.add(library);
 
 									} catch (Exception ex) {
@@ -79,12 +79,11 @@ public enum XPagesComponentProvider {
 		return m_Libraries;
 	}
 
-	private List<XSPLibrary> sortLibraries(List<XSPLibrary> libraries) {
-		List<XSPLibrary> listRC = new ArrayList<XSPLibrary>();
-		List<String> lstChecked = new ArrayList<String>();
-		for (XSPLibrary lib : libraries) {
+	private List<XDELibrary> sortLibraries(List<XDELibrary> libraries) {
+		List<XDELibrary> listRC = new ArrayList<XDELibrary>();
+		for (XDELibrary lib : libraries) {
 			Set<String> setTemp = new HashSet<String>();
-			List<String> deps = getDependencies(lib, lstChecked, setTemp, libraries);
+			Set<String> deps = getDependencies(lib, setTemp, libraries);
 			int nPosition = 0;
 			for (String depID : deps) {
 				System.out.println(lib.getLib().getLibraryId() + " search for:" + depID);
@@ -95,9 +94,9 @@ public enum XPagesComponentProvider {
 		return listRC;
 	}
 
-	private int getPosition(String depID, List<XSPLibrary> listRC) {
+	private int getPosition(String depID, List<XDELibrary> listRC) {
 		int nCounter = -1;
-		for (XSPLibrary lib : listRC) {
+		for (XDELibrary lib : listRC) {
 			nCounter++;
 			if (depID.equals(lib.getLib().getLibraryId())) {
 				return nCounter;
@@ -107,33 +106,31 @@ public enum XPagesComponentProvider {
 		return -1;
 	}
 
-	private List<String> getDependencies(XSPLibrary lib, List<String> checked, Set<String> full, List<XSPLibrary> libraries) {
-		List<String> eList = Collections.emptyList();
-		if (checked.contains(lib.getLib().getLibraryId())) {
-			return eList;
-		}
+	private Set<String> getDependencies(XDELibrary lib, Set<String> full, List<XDELibrary> libraries) {
+		Set<String> eList = Collections.emptySet();
 		if (lib.getLib().getDependencies() == null) {
 			return eList;
 		}
 		List<String> lstDep = Arrays.asList(lib.getLib().getDependencies());
-		checked.add(lib.getLib().getLibraryId());
 		for (String depID : lstDep) {
-			XSPLibrary libNew = getLibraryByID(depID, libraries);
+			XDELibrary libNew = getLibraryByID(depID, libraries);
 			if (libNew == null) {
 				System.out.println("!!!! " + depID + "not found!");
+
 			} else {
-				List<String> ids = getDependencies(libNew, checked, full, libraries);
-				for (String nId : ids) {
-					full.add(nId);
+				if (!full.contains(libNew.getLib().getLibraryId())) {
+					full.add(libNew.getLib().getLibraryId());
+					Set<String> ids = getDependencies(libNew, full, libraries);
+					full.addAll(ids);
 				}
 			}
 		}
-		return new ArrayList<String>(full);
+		return full;
 
 	}
 
-	private XSPLibrary getLibraryByID(String depID, List<XSPLibrary> libraries) {
-		for (XSPLibrary lib : libraries) {
+	private XDELibrary getLibraryByID(String depID, List<XDELibrary> libraries) {
+		for (XDELibrary lib : libraries) {
 			if (depID.equals(lib.getLib().getLibraryId())) {
 				return lib;
 			}
@@ -151,14 +148,34 @@ public enum XPagesComponentProvider {
 		// register the project (before this the registry is in an invalid
 		// state)
 		reg.createProject(id);
-		for (XSPLibrary library : m_Libraries) {
+		for (XDELibrary library : m_Libraries) {
 			XspLibrary lib = library.getLib();
-			System.out.println(lib.getLibraryId());
 			SimpleRegistryProvider provider = new SimpleRegistryProvider();
 			provider.init(new LibraryWrapper(lib.getLibraryId(), lib));
+			checkManager( provider);
 			reg.addDepend(provider.getRegistry());
 		}
 		reg.refreshReferences();
 		return reg;
+	}
+
+	private void checkManager(SimpleRegistryProvider provider) {
+		for (String id: m_Manager.getRegistryProviderIds()) {
+			if (id.equals(provider.getId())) {
+				return;
+			}
+		}
+		System.out.println("add "+ provider.getId() +" to XSPManager");
+		m_Manager.setRegistryProvider(provider.getId(), provider);
+	}
+	
+	public void crawlRegistry() {
+		FacesSharableRegistry reg = getRegistry();
+		System.out.println(reg.findDefs().size());
+		for (FacesComponentDefinition def: reg.findComponentDefs()) {
+			System.out.println(def.getFirstDefaultPrefix() +":"+def.getTagName() + " "+ def.getNamespaceUri());
+			System.out.println(def.getExtension("designer-extension"));
+			
+		}
 	}
 }

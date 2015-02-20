@@ -2,12 +2,12 @@ package org.openntf.eclipse.xpdesigner.core.xspcomponents;
 
 import com.ibm.xsp.library.XspLibrary;
 
-public class XSPLibrary {
+public class XDELibrary {
 	private final String m_ClassName;
 	private final String m_PluginID;
 	private final XspLibrary m_Lib;
 	
-	public XSPLibrary(String pluginID, String className,XspLibrary lib) {
+	public XDELibrary(String pluginID, String className,XspLibrary lib) {
 		m_ClassName = className;
 		m_PluginID = pluginID;
 		m_Lib = lib;

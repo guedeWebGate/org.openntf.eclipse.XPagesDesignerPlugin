@@ -12,7 +12,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.openntf.eclipse.xpdesigner.core.XPagesComponentProvider;
-import org.openntf.eclipse.xpdesigner.core.xspcomponents.XSPLibrary;
+import org.openntf.eclipse.xpdesigner.core.xspcomponents.XDELibrary;
 import org.openntf.eclipse.xpdesigner.ui.projectwizard.XPagesProjectSupport;
 
 public class NewXPProject extends Wizard implements INewWizard, IExecutableExtension {
@@ -38,7 +38,7 @@ public class NewXPProject extends Wizard implements INewWizard, IExecutableExten
 			location = m_PageOne.getLocationURI();
 		} // else location == null
 
-		List<XSPLibrary> libs = m_PageOne.getSelectedXSPLibraries();
+		List<XDELibrary> libs = m_PageOne.getSelectedXSPLibraries();
 		XPagesProjectSupport.createProject(name, location, libs);
 
 		BasicNewProjectResourceWizard.updatePerspective(m_Config);
@@ -48,8 +48,8 @@ public class NewXPProject extends Wizard implements INewWizard, IExecutableExten
 	@Override
 	public void addPages() {
 		try {
-			List<XSPLibrary> libs = XPagesComponentProvider.INSTANCE.scanPlugins4XSPLibraries();
-			for (XSPLibrary lib : libs) {
+			List<XDELibrary> libs = XPagesComponentProvider.INSTANCE.scanPlugins4XSPLibraries();
+			for (XDELibrary lib : libs) {
 				System.out.println(lib.getPluginID() + " --> " + lib.getClassName());
 			}
 		} catch (Exception ex) {
