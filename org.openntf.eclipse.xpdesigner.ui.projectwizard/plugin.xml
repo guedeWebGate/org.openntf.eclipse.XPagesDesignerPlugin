@@ -111,7 +111,7 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="org.openntf.eclipse.xpdesigner.ui.editor.XSPEditor"
+            class="org.openntf.eclipse.xpdesigner.ui.editor.XDEMultiPageXSPEditor"
             default="false"
             id="org.openntf.eclipse.xpdesigner.ui.projectwizard.xspeditor"
             name="XSP Editor">

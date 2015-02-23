@@ -38,7 +38,6 @@ public enum XPagesComponentProvider {
 	private Map<String, List<FacesComponentDefinition>> m_ComponentsByCategory;
 
 	public synchronized List<XDELibrary> scanPlugins4XSPLibraries() {
-		System.out.println("REGMAN: " + XspRegistryManager.getManager().getRegistryProviderIds().size());
 		if (m_Libraries == null) {
 			m_Manager = XspRegistryManager.getManager();
 			List<XDELibrary> libraries = new LinkedList<XDELibrary>();
