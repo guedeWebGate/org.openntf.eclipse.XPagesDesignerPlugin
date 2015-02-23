@@ -12,7 +12,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.openntf.eclipse.xpdesigner.core.XPagesComponentProvider;
-import org.openntf.eclipse.xpdesigner.core.xspcomponents.XDELibrary;
+import org.openntf.eclipse.xpdesigner.core.xdecomponents.XDELibrary;
 import org.openntf.eclipse.xpdesigner.ui.projectwizard.XPagesProjectSupport;
 
 public class NewXPProject extends Wizard implements INewWizard, IExecutableExtension {

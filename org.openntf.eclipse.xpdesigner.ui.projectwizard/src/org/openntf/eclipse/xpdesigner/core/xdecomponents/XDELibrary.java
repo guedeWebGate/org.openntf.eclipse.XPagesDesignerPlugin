@@ -1,4 +1,4 @@
-package org.openntf.eclipse.xpdesigner.core.xspcomponents;
+package org.openntf.eclipse.xpdesigner.core.xdecomponents;
 
 import com.ibm.xsp.library.XspLibrary;
 

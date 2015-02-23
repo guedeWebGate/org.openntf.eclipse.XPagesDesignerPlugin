@@ -36,7 +36,7 @@ import org.eclipse.pde.internal.core.TargetPlatformHelper;
 import org.eclipse.pde.internal.core.build.WorkspaceBuildModel;
 import org.eclipse.pde.internal.core.bundle.WorkspaceBundlePluginModel;
 import org.eclipse.pde.internal.core.ibundle.IBundlePluginBase;
-import org.openntf.eclipse.xpdesigner.core.xspcomponents.XDELibrary;
+import org.openntf.eclipse.xpdesigner.core.xdecomponents.XDELibrary;
 import org.openntf.eclipse.xpdesigner.ui.natures.ProjectNature;
 import org.osgi.framework.Constants;
 

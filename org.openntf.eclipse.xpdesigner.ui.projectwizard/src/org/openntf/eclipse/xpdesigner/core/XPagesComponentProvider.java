@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.pde.core.plugin.IPluginBase;
@@ -15,9 +17,11 @@ import org.eclipse.pde.core.plugin.IPluginExtension;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.core.plugin.IPluginObject;
 import org.eclipse.pde.core.plugin.PluginRegistry;
-import org.openntf.eclipse.xpdesigner.core.xspcomponents.XDELibrary;
+import org.openntf.eclipse.xpdesigner.core.xdecomponents.XDEComponentElement;
+import org.openntf.eclipse.xpdesigner.core.xdecomponents.XDELibrary;
 import org.osgi.framework.Bundle;
 
+import com.ibm.commons.util.StringUtil;
 import com.ibm.xsp.library.LibraryWrapper;
 import com.ibm.xsp.library.XspLibrary;
 import com.ibm.xsp.registry.FacesComponentDefinition;
@@ -31,9 +35,9 @@ public enum XPagesComponentProvider {
 
 	private List<XDELibrary> m_Libraries;
 	private XspRegistryManager m_Manager;
+	private Map<String, List<FacesComponentDefinition>> m_ComponentsByCategory;
 
 	public synchronized List<XDELibrary> scanPlugins4XSPLibraries() {
-		System.out.println("REGMAN: " + XspRegistryManager.getManager().getRegistryProviderIds().size());
 		if (m_Libraries == null) {
 			m_Manager = XspRegistryManager.getManager();
 			List<XDELibrary> libraries = new LinkedList<XDELibrary>();
@@ -139,9 +143,8 @@ public enum XPagesComponentProvider {
 	}
 
 	public FacesSharableRegistry getRegistry() {
-		if (m_Libraries == null) {
-			scanPlugins4XSPLibraries();
-		}
+
+		scanPlugins4XSPLibraries();
 		String id = "empty local registry";
 		SharableRegistryImpl reg = new SharableRegistryImpl(id);
 		reg.setRegistryType(FacesSharableRegistry.TYPE_APPLICATION);
@@ -152,7 +155,7 @@ public enum XPagesComponentProvider {
 			XspLibrary lib = library.getLib();
 			SimpleRegistryProvider provider = new SimpleRegistryProvider();
 			provider.init(new LibraryWrapper(lib.getLibraryId(), lib));
-			checkManager( provider);
+			checkManager(provider);
 			reg.addDepend(provider.getRegistry());
 		}
 		reg.refreshReferences();
@@ -160,22 +163,43 @@ public enum XPagesComponentProvider {
 	}
 
 	private void checkManager(SimpleRegistryProvider provider) {
-		for (String id: m_Manager.getRegistryProviderIds()) {
+		for (String id : m_Manager.getRegistryProviderIds()) {
 			if (id.equals(provider.getId())) {
 				return;
 			}
 		}
-		System.out.println("add "+ provider.getId() +" to XSPManager");
+		System.out.println("add " + provider.getId() + " to XSPManager");
 		m_Manager.setRegistryProvider(provider.getId(), provider);
 	}
-	
-	public void crawlRegistry() {
-		FacesSharableRegistry reg = getRegistry();
-		System.out.println(reg.findDefs().size());
-		for (FacesComponentDefinition def: reg.findComponentDefs()) {
-			System.out.println(def.getFirstDefaultPrefix() +":"+def.getTagName() + " "+ def.getNamespaceUri());
-			System.out.println(def.getExtension("designer-extension"));
-			
+
+	public synchronized void checkComponentTreeAndBuild() {
+		if (m_ComponentsByCategory == null) {
+			m_ComponentsByCategory = new TreeMap<String, List<FacesComponentDefinition>>();
+			FacesSharableRegistry reg = getRegistry();
+			for (FacesComponentDefinition def : reg.findComponentDefs()) {
+				if (def.isTag()) {
+					XDEComponentElement compElement = (XDEComponentElement) def.getExtension("designerComponent");
+					String cat = compElement.getCateogry();
+					if (StringUtil.isEmpty(cat)) {
+						cat = "no category";
+					}
+					List<FacesComponentDefinition> list;
+					if (!m_ComponentsByCategory.containsKey(cat)) {
+						System.out.println("New cat generated: " + cat);
+						list = new LinkedList<FacesComponentDefinition>();
+						list.add(def);
+						m_ComponentsByCategory.put(cat, list);
+					} else {
+						list = m_ComponentsByCategory.get(cat);
+						list.add(def);
+					}
+				}
+			}
 		}
+	}
+
+	public Map<String, List<FacesComponentDefinition>> getComponentMap() {
+		checkComponentTreeAndBuild();
+		return m_ComponentsByCategory;
 	}
 }

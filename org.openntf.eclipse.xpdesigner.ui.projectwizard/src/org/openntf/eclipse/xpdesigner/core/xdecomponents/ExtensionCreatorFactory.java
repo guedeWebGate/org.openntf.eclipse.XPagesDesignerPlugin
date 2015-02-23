@@ -1,12 +1,13 @@
-package org.openntf.eclipse.xpdesigner.core.xspcomponents;
+package org.openntf.eclipse.xpdesigner.core.xdecomponents;
 
+import org.openntf.eclipse.xpdesigner.core.xspcomponents.extensionsfactory.ComponentCreator;
 import org.w3c.dom.Element;
 
 import com.ibm.xsp.registry.FacesExtensibleNode;
 import com.ibm.xsp.registry.parse.RegistryAnnotaterInfo;
 
 public enum ExtensionCreatorFactory {
-	COMPONENT("component", "designerComponent", null);
+	COMPONENT("component", "designerComponent", new ComponentCreator());
 	private final String m_ElementName;
 	private final String m_ExtensionName;
 	private final IXDEExtensionCreator m_Creator;

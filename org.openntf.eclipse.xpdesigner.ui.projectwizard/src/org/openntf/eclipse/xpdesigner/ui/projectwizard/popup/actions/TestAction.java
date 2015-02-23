@@ -11,7 +11,7 @@ import org.openntf.eclipse.xpdesigner.core.XPagesComponentProvider;
 public class TestAction implements IObjectActionDelegate {
 
 	private Shell shell;
-	
+
 	/**
 	 * Constructor for Action1.
 	 */
@@ -30,11 +30,8 @@ public class TestAction implements IObjectActionDelegate {
 	 * @see IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
-		XPagesComponentProvider.INSTANCE.crawlRegistry();
-		MessageDialog.openInformation(
-			shell,
-			"New XPages Project Wizard",
-			"A-Test was executed.");
+		XPagesComponentProvider.INSTANCE.checkComponentTreeAndBuild();
+		MessageDialog.openInformation(shell, "New XPages Project Wizard", "A-Test was executed.");
 	}
 
 	/**
