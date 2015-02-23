@@ -4,10 +4,10 @@ import java.net.URL;
 import java.util.Iterator;
 
 import org.openntf.eclipse.xpdesigner.core.LanguageProcessor;
-import org.openntf.eclipse.xpdesigner.core.xspcomponents.IXDEExtension;
-import org.openntf.eclipse.xpdesigner.core.xspcomponents.IXDEExtensionCreator;
-import org.openntf.eclipse.xpdesigner.core.xspcomponents.XDEIcon;
-import org.openntf.eclipse.xpdesigner.core.xspcomponents.XDEBasicElement;
+import org.openntf.eclipse.xpdesigner.core.xdecomponents.IXDEExtension;
+import org.openntf.eclipse.xpdesigner.core.xdecomponents.IXDEExtensionCreator;
+import org.openntf.eclipse.xpdesigner.core.xdecomponents.XDEBasicElement;
+import org.openntf.eclipse.xpdesigner.core.xdecomponents.XDEIcon;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Element;
@@ -62,7 +62,8 @@ public abstract class AbstractCreator implements IXDEExtensionCreator {
 					}
 				}
 			}
-			if ("icons".equals(tagName)) {
+			System.out.println(tagName);
+			if ("icon".equals(tagName)) {
 				if (extElement.hasNoIcon()) {
 					XDEIcon icon = buildIcon(child, registryAnnotaterInfo);
 					if (icon != null) {
@@ -76,6 +77,7 @@ public abstract class AbstractCreator implements IXDEExtensionCreator {
 	}
 
 	private XDEIcon buildIcon(Element child, RegistryAnnotaterInfo registryAnnotaterInfo) {
+		System.out.println("Building icon");
 		String smallIcon = getChildNodeStringValue(child, "small-icon");
 		String largeIcon = getChildNodeStringValue(child, "large-icon");
 		URL smallIconURL = buildIconURL(smallIcon, registryAnnotaterInfo);

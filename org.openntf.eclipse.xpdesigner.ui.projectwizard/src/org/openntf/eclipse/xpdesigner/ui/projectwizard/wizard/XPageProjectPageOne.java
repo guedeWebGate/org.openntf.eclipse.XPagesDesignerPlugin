@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.openntf.eclipse.xpdesigner.core.XPagesComponentProvider;
-import org.openntf.eclipse.xpdesigner.core.xspcomponents.XDELibrary;
+import org.openntf.eclipse.xpdesigner.core.xdecomponents.XDELibrary;
 
 public class XPageProjectPageOne extends WizardNewProjectCreationPage {
 

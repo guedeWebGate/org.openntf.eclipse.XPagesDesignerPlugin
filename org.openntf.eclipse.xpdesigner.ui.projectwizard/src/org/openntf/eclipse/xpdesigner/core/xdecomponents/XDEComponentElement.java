@@ -1,4 +1,4 @@
-package org.openntf.eclipse.xpdesigner.core.xspcomponents;
+package org.openntf.eclipse.xpdesigner.core.xdecomponents;
 
 public class XDEComponentElement extends XDEBasicElement {
 

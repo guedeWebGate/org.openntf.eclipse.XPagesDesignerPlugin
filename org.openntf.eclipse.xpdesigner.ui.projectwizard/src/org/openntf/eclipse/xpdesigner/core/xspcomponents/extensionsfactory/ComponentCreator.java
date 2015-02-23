@@ -2,8 +2,8 @@ package org.openntf.eclipse.xpdesigner.core.xspcomponents.extensionsfactory;
 
 import java.util.Iterator;
 
-import org.openntf.eclipse.xpdesigner.core.xspcomponents.XDEBasicElement;
-import org.openntf.eclipse.xpdesigner.core.xspcomponents.XDEComponentElement;
+import org.openntf.eclipse.xpdesigner.core.xdecomponents.XDEBasicElement;
+import org.openntf.eclipse.xpdesigner.core.xdecomponents.XDEComponentElement;
 import org.w3c.dom.Element;
 
 import com.ibm.commons.util.StringUtil;

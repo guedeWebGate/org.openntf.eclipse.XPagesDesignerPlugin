@@ -1,4 +1,4 @@
-package org.openntf.eclipse.xpdesigner.core.xspcomponents;
+package org.openntf.eclipse.xpdesigner.core.xdecomponents;
 
 public class XDEBasicElement implements IXDEExtension {
 	private String m_Description;

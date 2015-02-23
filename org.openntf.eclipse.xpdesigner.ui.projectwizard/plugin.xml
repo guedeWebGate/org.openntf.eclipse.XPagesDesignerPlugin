@@ -44,6 +44,12 @@
             id="org.openntf.xpdesigner.ui.navigator"
             name="XPages Navigator">
       </view>
+      <view
+          class="org.openntf.eclipse.xpdesigner.ui.views.PaletteViewController"
+          icon="icons/view16/xsp_icon_view.gif"
+          id="org.openntf.eclipse.xpdesigner.view.palette"
+          name="Controls">
+         </view>
    </extension>
    <extension
          point="org.eclipse.ui.navigator.viewer">
@@ -242,10 +248,19 @@
    <extension
          point="com.ibm.xsp.core.xspRegistryAnnotater">
       <annotater
-            class="org.openntf.eclipse.xpdesigner.core.xspcomponents.ComponentAnnotater"
+            class="org.openntf.eclipse.xpdesigner.core.xdecomponents.ComponentAnnotater"
             id="org.openntf.eclipse.xpdesigner.core.xspcomponents.ComponentAnnotater"
             name="XPages Designer Plugin Annotater">
       </annotater>
    </extension>
+
+	<extension point="org.eclipse.core.runtime.adapters">
+    	<factory 
+    		class="org.openntf.eclipse.xpdesigner.core.PaletteViewAdapter"
+            adaptableType="org.eclipse.gef.ui.views.palette.PaletteView">
+         
+         	<adapter type="org.eclipse.ui.part.IContributedContentsView"/>
+      	</factory>
+	</extension>       
 
 </plugin>

@@ -6,7 +6,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.pde.core.plugin.IPluginImport;
 import org.eclipse.pde.internal.core.bundle.WorkspaceBundlePluginModel;
-import org.openntf.eclipse.xpdesigner.core.xspcomponents.XDELibrary;
+import org.openntf.eclipse.xpdesigner.core.xdecomponents.XDELibrary;
 
 @SuppressWarnings("restriction")
 public enum PluginDependencyManager {

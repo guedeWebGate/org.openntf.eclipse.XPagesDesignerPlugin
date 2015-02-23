@@ -26,7 +26,9 @@ public class PerspectiveFactory implements IPerspectiveFactory {
 				IPageLayout.BOTTOM, 0.75f, factory.getEditorArea());
 		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
 
-		factory.addView(IPageLayout.ID_OUTLINE, IPageLayout.RIGHT, 0.75f, factory.getEditorArea());
+		IFolderLayout topRight = factory.createFolder("topRight", IPageLayout.RIGHT, 0.75f, factory.getEditorArea());
+		topRight.addView(IPageLayout.ID_OUTLINE);
+		topRight.addView("org.openntf.eclipse.xpdesigner.view.palette");
 
 		factory.addNewWizardShortcut("org.openntf.eclipse.xpdesigner.ui.projectwizard.newxproject"); //$NON-NLS-1$
 		factory.addNewWizardShortcut("org.openntf.eclipse.xpdesigner.ui.projectwizard.newXPages"); //$NON-NLS-1$

@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Test;
  
-import org.openntf.eclipse.xpdesigner.core.xspcomponents.XDELibrary;
+import org.openntf.eclipse.xpdesigner.core.xdecomponents.XDELibrary;
 import org.openntf.eclipse.xpdesigner.ui.natures.ProjectNature;
 import org.openntf.eclipse.xpdesigner.ui.projectwizard.XPagesProjectSupport;
  
