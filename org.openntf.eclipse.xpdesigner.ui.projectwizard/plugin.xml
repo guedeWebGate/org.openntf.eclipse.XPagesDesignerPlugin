@@ -107,6 +107,13 @@
             name="XSP File"
             priority="normal">
       </content-type>
+      <content-type
+            base-type="(org.eclipse.core.runtime.properties"
+            file-extensions="xde-server-properties, xde-application-properties"
+            id="org.openntf.eclipse.xpdesigner.ui.serverapp.properties"
+            name="Server/Application Properties"
+            priority="normal">
+      </content-type>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -118,6 +125,16 @@
          <contentTypeBinding
                contentTypeId="org.openntf.eclipse.xpdesigner.contenttype.xsp">
          </contentTypeBinding>
+      </editor>
+      <editor
+            name="Properties Editor"
+            contributorClass="org.eclipse.jdt.internal.ui.propertiesfileeditor.PropertiesFileEditorActionContributor"
+            class="org.eclipse.jdt.internal.ui.propertiesfileeditor.PropertiesFileEditor"
+            symbolicFontName="org.eclipse.jdt.ui.PropertiesFileEditor.textfont"
+            id="org.openntf.eclipse.xpdesigner.edito.xdeproperties">
+            <contentTypeBinding
+               contentTypeId="org.openntf.eclipse.xpdesigner.ui.serverapp.properties"
+            /> 
       </editor>
    </extension>
    <extension
