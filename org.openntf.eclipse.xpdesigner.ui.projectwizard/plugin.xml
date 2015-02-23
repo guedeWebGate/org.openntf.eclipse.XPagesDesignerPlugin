@@ -35,6 +35,13 @@
             name="Custom Control"
             project="false">
       </wizard>
+      <wizard
+            category="org.openntf.eclipse.xpdesigner.ui.projectwizard.cat"
+            class="org.openntf.eclipse.xpdesigner.ui.projectwizard.wizard.NewServer"
+            id="org.openntf.eclipse.xpdesigner.ui.projectwizard.server"
+            name="XWorks / Domino Server"
+            project="false">
+      </wizard>
    </extension>
    <extension
          point="org.eclipse.ui.views">

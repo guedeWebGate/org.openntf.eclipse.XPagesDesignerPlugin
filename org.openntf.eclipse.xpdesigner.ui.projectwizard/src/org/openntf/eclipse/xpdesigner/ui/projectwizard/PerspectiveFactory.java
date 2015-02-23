@@ -33,6 +33,7 @@ public class PerspectiveFactory implements IPerspectiveFactory {
 		factory.addNewWizardShortcut("org.openntf.eclipse.xpdesigner.ui.projectwizard.newxproject"); //$NON-NLS-1$
 		factory.addNewWizardShortcut("org.openntf.eclipse.xpdesigner.ui.projectwizard.newXPages"); //$NON-NLS-1$
 		factory.addNewWizardShortcut("org.openntf.eclipse.xpdesigner.ui.projectwizard.newcustomcontrol"); //$NON-NLS-1$
+		factory.addNewWizardShortcut("org.openntf.eclipse.xpdesigner.ui.projectwizard.server");
 		//factory.addNewWizardShortcut("org.eclipse.pde.ui.NewFeatureProjectWizard"); //$NON-NLS-1$
 
 	}
