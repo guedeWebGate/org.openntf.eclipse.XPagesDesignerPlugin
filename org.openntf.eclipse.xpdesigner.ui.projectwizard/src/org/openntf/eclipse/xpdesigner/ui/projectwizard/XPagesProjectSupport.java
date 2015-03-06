@@ -6,7 +6,10 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
@@ -60,7 +63,7 @@ public class XPagesProjectSupport {
 		try {
 			addNature(project);
 
-			String[] paths = { "Code/Java", "Forms", "Views", "CustomControls", "XPages", "WebContent/META-INF/classes","WebContent/js","WebContent/css", "Generated/xsp", "Generated/plugin" }; //$NON-NLS-1$ //$NON-NLS-2$
+			String[] paths = { "Code/Java", "Forms", "Views", "CustomControls", "XPages", "WebContent/META-INF/classes", "WebContent/js", "WebContent/css", "Generated/xsp", "Generated/plugin" }; //$NON-NLS-1$ //$NON-NLS-2$
 			addToProjectStructure(project, paths);
 
 			setClasspath(project, "WebContent/META-INF/classes");
@@ -232,7 +235,7 @@ public class XPagesProjectSupport {
 		if (!project.hasNature("org.eclipse.pde.PluginNature")) {
 			addNatureToProject(project, "org.eclipse.pde.PluginNature");
 		}
-		
+
 		if (!project.hasNature("org.eclipse.wst.jsdt.core.jsNature")) {
 			addNatureToProject(project, "org.eclipse.wst.jsdt.core.jsNature");
 		}
@@ -294,4 +297,22 @@ public class XPagesProjectSupport {
 		return path;
 	}
 
+	public static Map<String, IProject> buildXPagesProjectList() {
+		Map<String, IProject> projectList = new TreeMap<String, IProject>();
+		for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+			try {
+				if (project.hasNature(ProjectNature.NATURE_ID)) {
+					projectList.put(project.getName(), project);
+				}
+			} catch (CoreException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return projectList;
+	}
+	public static List<String> getProjectsAsList(Map<String, IProject> projectList) {
+		List<String> list = new LinkedList<String>();
+		list.addAll(projectList.keySet());
+		return list;
+	}
 }

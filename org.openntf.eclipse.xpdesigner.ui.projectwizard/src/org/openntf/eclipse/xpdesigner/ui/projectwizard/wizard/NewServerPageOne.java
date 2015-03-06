@@ -10,6 +10,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.openntf.eclipse.xpdesigner.ui.projectwizard.ServerDefinitionSupport;
+
+import com.ibm.commons.util.StringUtil;
 
 public class NewServerPageOne extends WizardPage {
 	private static final String REGEX_PATTERN_SERVERNAME = "^[A-Za-z0-9_]+$";
@@ -52,6 +55,15 @@ public class NewServerPageOne extends WizardPage {
 		lab2.setText("Server FQDN/IP Address:");
 
 		m_ServerFQDN = new Text(comp, SWT.BORDER);
+		m_ServerFQDN.setText("localhost");
+		m_ServerFQDN.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent e) {
+				validate();
+
+			}
+		});
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		m_ServerFQDN.setLayoutData(gd);
 
@@ -77,6 +89,11 @@ public class NewServerPageOne extends WizardPage {
 	protected void validate() {
 		if (!m_ServerName.getText().matches(REGEX_PATTERN_SERVERNAME)) {
 			setMessage("A name must start with a letter or underscore (_) and can only contain numbers, letters and underscores (_).", DialogPage.ERROR);
+			setPageComplete(false);
+			return;
+		}
+		if (!StringUtil.isEmpty(m_ServerName.getText()) && ServerDefinitionSupport.INSTANCE.checkHasServerName(m_ServerName.getText())) {
+			setMessage("A server with this name already exists.");
 			setPageComplete(false);
 			return;
 		}

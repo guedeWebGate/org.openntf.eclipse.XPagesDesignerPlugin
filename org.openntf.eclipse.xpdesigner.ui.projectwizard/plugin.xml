@@ -42,6 +42,13 @@
             name="XWorks / Domino Server"
             project="false">
       </wizard>
+      <wizard
+            category="org.openntf.eclipse.xpdesigner.ui.projectwizard.cat"
+            class="org.openntf.eclipse.xpdesigner.ui.projectwizard.wizard.NewApplication"
+            id="org.openntf.eclipse.xpdesigner.ui.projectwizard.application"
+            name="Application Deployment Mapping"
+            project="false">
+      </wizard>
    </extension>
    <extension
          point="org.eclipse.ui.views">
@@ -116,9 +123,16 @@
       </content-type>
       <content-type
             base-type="(org.eclipse.core.runtime.properties"
-            file-extensions="xde-server-properties, xde-application-properties"
-            id="org.openntf.eclipse.xpdesigner.ui.serverapp.properties"
-            name="Server/Application Properties"
+            file-extensions="xde-application-properties"
+            id="org.openntf.eclipse.xpdesigner.ui.application.properties"
+            name="Application Properties"
+            priority="normal">
+      </content-type>
+      <content-type
+            base-type="(org.eclipse.core.runtime.properties"
+            file-extensions="xde-server-properties"
+            id="org.openntf.eclipse.xpdesigner.ui.server.properties"
+            name="Server Properties"
             priority="normal">
       </content-type>
    </extension>
@@ -140,8 +154,11 @@
             symbolicFontName="org.eclipse.jdt.ui.PropertiesFileEditor.textfont"
             id="org.openntf.eclipse.xpdesigner.edito.xdeproperties">
             <contentTypeBinding
-               contentTypeId="org.openntf.eclipse.xpdesigner.ui.serverapp.properties"
-            /> 
+               contentTypeId="org.openntf.eclipse.xpdesigner.ui.application.properties"
+            />
+            <contentTypeBinding
+                  contentTypeId="org.openntf.eclipse.xpdesigner.ui.server.properties">
+            </contentTypeBinding> 
       </editor>
    </extension>
    <extension
