@@ -22,16 +22,15 @@ import com.ibm.commons.util.StringUtil;
 
 public class NewApplicationPageOne extends WizardPage {
 	private static final String REGEX_PATTERN_APPNAME = "^[A-Za-z0-9_]+$";
-
 	private Text m_ApplicationName;
 	private Combo m_XPagesProject;
 	private Combo m_TargetServer;
 	private Button m_AutoUpdate;
+	private Text m_PathToNSF;
 	private Map<String, IProject> m_ProjectList;
 
 	protected NewApplicationPageOne(String pageName) {
 		super(pageName);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -58,6 +57,20 @@ public class NewApplicationPageOne extends WizardPage {
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		m_ApplicationName.setLayoutData(gd);
 
+		lab = new Label(comp, SWT.NONE);
+		lab.setText("Path on Server:");
+		m_PathToNSF = new Text(comp, SWT.BORDER);
+		m_PathToNSF.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent e) {
+				validate();
+			}
+
+		});
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		m_PathToNSF.setLayoutData(gd);
+
 		Label lab2 = new Label(comp, SWT.NONE);
 		m_ProjectList = XPagesProjectSupport.buildXPagesProjectList();
 
@@ -77,9 +90,10 @@ public class NewApplicationPageOne extends WizardPage {
 		m_TargetServer.setItems(ServerDefinitionSupport.INSTANCE.getServerDefinitionNames().toArray(new String[0]));
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		m_TargetServer.setLayoutData(gd);
+		m_TargetServer.select(0);
 		
 		Label lab4 = new Label(comp, SWT.NONE);
-		lab3.setText("");
+		lab4.setText("");
 
 		m_AutoUpdate = new Button(comp, SWT.CHECK);
 		m_AutoUpdate.setText("Update server application automatically");
@@ -89,6 +103,46 @@ public class NewApplicationPageOne extends WizardPage {
 	}
 
 	protected void validate() {
+		if (!StringUtil.isEmpty(m_ApplicationName.getText()) && !m_ApplicationName.getText().matches(REGEX_PATTERN_APPNAME)) {
+			setMessage("A name must start with a letter or underscore (_) and can only contain numbers, letters and underscores (_).", DialogPage.ERROR);
+			setPageComplete(false);
+			return;
+		}
+
+		if (!StringUtil.isEmpty(m_PathToNSF.getText()) && !m_PathToNSF.getText().toLowerCase().endsWith(".nsf")) {
+			setMessage("The path must end with .nsf", DialogPage.ERROR);
+			setPageComplete(false);
+			return;
+
+		}
+
+		setMessage("Create a new Application Mapping Definition", DialogPage.INFORMATION);
+		setPageComplete(true);
+
+	}
+
+	public Text getApplicationName() {
+		return m_ApplicationName;
+	}
+
+	public Combo getXPagesProject() {
+		return m_XPagesProject;
+	}
+
+	public Combo getTargetServer() {
+		return m_TargetServer;
+	}
+
+	public Button getAutoUpdate() {
+		return m_AutoUpdate;
+	}
+
+	public Text getPathToNSF() {
+		return m_PathToNSF;
+	}
+
+	public Map<String, IProject> getProjectList() {
+		return m_ProjectList;
 	}
 
 }

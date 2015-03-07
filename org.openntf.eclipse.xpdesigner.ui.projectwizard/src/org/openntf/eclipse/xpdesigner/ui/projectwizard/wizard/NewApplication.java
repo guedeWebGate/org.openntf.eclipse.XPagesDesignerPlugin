@@ -1,14 +1,17 @@
 package org.openntf.eclipse.xpdesigner.ui.projectwizard.wizard;
 
+import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.openntf.eclipse.xpdesigner.ui.projectwizard.ApplicationDefinitionSupport;
 
 public class NewApplication extends Wizard implements INewWizard {
 
+	private NewApplicationPageOne m_PageOne;
+
 	public NewApplication() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -19,13 +22,14 @@ public class NewApplication extends Wizard implements INewWizard {
 
 	@Override
 	public boolean performFinish() {
-		// TODO Auto-generated method stub
-		return false;
+		ApplicationDefinitionSupport.INSTANCE.initApplicationDefinition(m_PageOne.getApplicationName(), m_PageOne.getAutoUpdate(), m_PageOne.getPathToNSF(), m_PageOne.getTargetServer(), m_PageOne.getXPagesProject());
+		return true;
 	}
 
 	@Override
 	public void addPages() {
-		NewApplicationPageOne m_PageOne = new NewApplicationPageOne("Application Deployment");
+		m_PageOne = new NewApplicationPageOne("Application Deployment");
 		addPage(m_PageOne);
+		m_PageOne.setMessage("Create a new Application Mapping Definition", DialogPage.INFORMATION);
 	}
 }
