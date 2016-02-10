@@ -16,13 +16,16 @@ public class NewApplication extends Wizard implements INewWizard {
 
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public boolean performFinish() {
-		ApplicationDefinitionSupport.INSTANCE.initApplicationDefinition(m_PageOne.getApplicationName(), m_PageOne.getAutoUpdate(), m_PageOne.getPathToNSF(), m_PageOne.getTargetServer(), m_PageOne.getXPagesProject());
+		String appName =m_PageOne.getApplicationName().getText().trim();
+		String autoUpdate = m_PageOne.getAutoUpdate().getSelection() ? "TRUE":"FALSE"; 
+		String pathToNsf =		m_PageOne.getPathToNSF().getText().trim();
+		String targetServer = m_PageOne.getTargetServer().getText().trim(); 
+		String xpagesProject = m_PageOne.getXPagesProject().getText().trim();
+		ApplicationDefinitionSupport.INSTANCE.initApplicationDefinition(appName, autoUpdate, pathToNsf, targetServer, xpagesProject);
 		return true;
 	}
 
