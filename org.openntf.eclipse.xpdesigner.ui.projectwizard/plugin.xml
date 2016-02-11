@@ -302,6 +302,28 @@
          
          	<adapter type="org.eclipse.ui.part.IContributedContentsView"/>
       	</factory>
-	</extension>       
+	</extension>
+ <extension
+       point="org.eclipse.ui.commands">
+    <command
+          categoryId="XPagesBuilder"
+          defaultHandler="org.openntf.eclipse.xpdesigner.core.commands.JarPackageBuilder"
+          description="Builds the jar file of all design elements"
+          id="org.openntf.eclipse.xpdesigner.ui.projectwizard.jarbuilder"
+          name="Package2Jar">
+    </command>
+ </extension>
+ <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          allPopups="false"
+          locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
+       <command
+             commandId="org.openntf.eclipse.xpdesigner.ui.projectwizard.jarbuilder"
+             label="Build JAR"
+             style="push">
+       </command>
+    </menuContribution>
+ </extension>
 
 </plugin>
