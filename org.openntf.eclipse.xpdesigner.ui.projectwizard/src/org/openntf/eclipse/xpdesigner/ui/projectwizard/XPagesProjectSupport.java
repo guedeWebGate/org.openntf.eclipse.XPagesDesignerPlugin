@@ -63,10 +63,10 @@ public class XPagesProjectSupport {
 		try {
 			addNature(project);
 
-			String[] paths = { "Code/Java", "Forms", "Views", "CustomControls", "XPages", "WebContent/META-INF/classes", "WebContent/js", "WebContent/css", "Generated/xsp", "Generated/plugin" }; //$NON-NLS-1$ //$NON-NLS-2$
+			String[] paths = { "Code/Java", "Forms", "Views", "CustomControls", "XPages", "WebContent/WEB-INF/classes", "WebContent/js", "WebContent/css", "Generated/xsp", "Generated/plugin" }; //$NON-NLS-1$ //$NON-NLS-2$
 			addToProjectStructure(project, paths);
 
-			setClasspath(project, "WebContent/META-INF/classes");
+			setClasspath(project, "WebContent/WEB-INF/classes");
 			WorkspaceBundlePluginModel model = initPluginStructure(projectName, project);
 			addImports(model);
 			addSelectedExtensionLibraries(model, libs);
@@ -156,7 +156,7 @@ public class XPagesProjectSupport {
 
 			// BUILD..
 			IBuildEntry bin = factory.createEntry("output..");
-			bin.addToken("WebContent/META-INF/classes");
+			bin.addToken("WebContent/WEB-INF/classes");
 			model.getBuild().add(bin);
 
 			// BIN.INCLUDES
@@ -259,6 +259,8 @@ public class XPagesProjectSupport {
 		javaProject.setOutputLocation(path, null);
 		List<IClasspathEntry> entries = getClassPathEntries(javaProject, project);
 		javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), null);
+		javaProject.setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
+		javaProject.setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
 	}
 
 	private static List<IClasspathEntry> getClassPathEntries(IJavaProject javaProject, IProject project) {

@@ -1,9 +1,9 @@
 package org.openntf.eclipse.xpdesigner.core;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -17,14 +17,14 @@ import org.eclipse.core.runtime.CoreException;
 public enum PackageBuilder {
 	INSTANCE;
 
-	public void buildPackage(IProject project, String targetFilename) throws CoreException {
+	public ByteArrayOutputStream buildPackage(IProject project) throws CoreException {
 		// Create a buffer for reading the files
-
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		IResource[] files = project.members();
 
 		try {
 			// Create the ZIP file
-			ZipOutputStream out = new ZipOutputStream(new FileOutputStream(targetFilename));
+			ZipOutputStream out = new ZipOutputStream(bos);
 
 			// Compress the files
 			processResources2ZIPStream(files, out, "");
@@ -34,6 +34,7 @@ public enum PackageBuilder {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return bos;
 	}
 
 	private void processResources2ZIPStream(IResource[] files, ZipOutputStream out, String path)
@@ -42,7 +43,8 @@ public enum PackageBuilder {
 
 		for (IResource resource : files) {
 			if (resource instanceof IFile) {
-				System.out.println("process " +path + resource.getName() + " / " + resource.getLocation().toOSString());
+				System.out
+						.println("process " + path + resource.getName() + " / " + resource.getLocation().toOSString());
 				File fileToAppend = resource.getLocation().toFile();
 				if (fileToAppend.canRead()) {
 					FileInputStream in = new FileInputStream(resource.getLocation().toFile());
@@ -68,5 +70,4 @@ public enum PackageBuilder {
 			}
 		}
 	}
-
 }
