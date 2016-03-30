@@ -320,7 +320,7 @@
           locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
        <command
              commandId="org.openntf.eclipse.xpdesigner.ui.projectwizard.jarbuilder"
-             label="Build JAR"
+             label="Publish Application to Server"
              style="push">
        </command>
     </menuContribution>

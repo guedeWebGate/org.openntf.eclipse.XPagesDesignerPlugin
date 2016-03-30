@@ -84,7 +84,8 @@ public class XSPBuilder extends IncrementalProjectBuilder {
 		if (kind == FULL_BUILD) {
 			fullBuild(monitor);
 		} else {
-			IResourceDelta delta = getDelta(getProject());
+			IProject project = getProject();
+			IResourceDelta delta = getDelta(project);
 			if (delta == null) {
 				fullBuild(monitor);
 			} else {
@@ -140,7 +141,8 @@ public class XSPBuilder extends IncrementalProjectBuilder {
 
 		// generate the .java class
 		String result = compiler.translate(logical);
-		XSPFileBuilder.INSTANCE.createJavaFileForXSP(getProject(), className,result);
+		IFile javaFile = XSPFileBuilder.INSTANCE.createJavaFileForXSP(getProject(), className,result);
+		
 	}
 
 }

@@ -6,12 +6,14 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -63,7 +65,8 @@ public class XPagesProjectSupport {
 		try {
 			addNature(project);
 
-			String[] paths = { "Code/Java", "Forms", "Views", "CustomControls", "XPages", "WebContent/WEB-INF/classes", "WebContent/js", "WebContent/css", "Generated/xsp", "Generated/plugin" }; //$NON-NLS-1$ //$NON-NLS-2$
+			String[] paths = { "Code/Java", "Forms", "Views", "CustomControls", "XPages", "WebContent/WEB-INF/classes", //$NON-NLS-1$ //$NON-NLS-2$
+					"WebContent/js", "WebContent/css", "Generated/xsp", "Generated/plugin" };
 			addToProjectStructure(project, paths);
 
 			setClasspath(project, "WebContent/WEB-INF/classes");
@@ -73,6 +76,22 @@ public class XPagesProjectSupport {
 			createActivator(project);
 			createBuildProperties(project);
 			model.save();
+			IProjectDescription desc = project.getDescription();
+			List<ICommand> commands = new ArrayList<ICommand>(Arrays.asList(desc.getBuildSpec()));
+			ICommand xspCommand = null;
+			for (ICommand thisCommand : commands) {
+				if ("org.openntf.eclipse.xpdesigner.core.XSPBuilder".equals(thisCommand.getBuilderName())) {
+					xspCommand = thisCommand;
+				}
+			}
+			if (xspCommand != null) {
+				System.out.println(xspCommand);
+				commands.remove(xspCommand);
+				commands.add(0, xspCommand);
+			}
+
+			desc.setBuildSpec(commands.toArray(new ICommand[commands.size()]));
+			project.setDescription(desc, null);
 		} catch (CoreException e) {
 			e.printStackTrace();
 			project = null;
@@ -84,7 +103,8 @@ public class XPagesProjectSupport {
 		return project;
 	}
 
-	private static void addSelectedExtensionLibraries(WorkspaceBundlePluginModel model, List<XDELibrary> libs) throws CoreException {
+	private static void addSelectedExtensionLibraries(WorkspaceBundlePluginModel model, List<XDELibrary> libs)
+			throws CoreException {
 		IPluginBase base = model.getPluginBase();
 		IPluginImport[] imports = base.getImports();
 		List<IPluginImport> toImport = PluginDependencyManager.INSTANCE.buildImportsDiff(libs, imports, model);
@@ -103,7 +123,8 @@ public class XPagesProjectSupport {
 	}
 
 	@SuppressWarnings("deprecation")
-	private static WorkspaceBundlePluginModel initPluginStructure(String projectName, IProject project) throws CoreException {
+	private static WorkspaceBundlePluginModel initPluginStructure(String projectName, IProject project)
+			throws CoreException {
 		IFile pluginXml = project.getFile("plugin.xml");
 		IFile manifest = project.getFile("META-INF/MANIFEST.MF");
 		WorkspaceBundlePluginModel model = new WorkspaceBundlePluginModel(manifest, pluginXml);
@@ -312,6 +333,7 @@ public class XPagesProjectSupport {
 		}
 		return projectList;
 	}
+
 	public static List<String> getProjectsAsList(Map<String, IProject> projectList) {
 		List<String> list = new LinkedList<String>();
 		list.addAll(projectList.keySet());
