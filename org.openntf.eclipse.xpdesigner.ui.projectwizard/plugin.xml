@@ -325,5 +325,19 @@
        </command>
     </menuContribution>
  </extension>
+ <extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.openntf.eclipse.xpdesigner.preferences.PreferenceInitializer">
+    </initializer>
+ </extension>
+ <extension
+       point="org.eclipse.ui.preferencePages">
+    <page
+          class="org.openntf.eclipse.xpdesigner.preferences.XPDEPreferencePage"
+          id="org.openntf.eclipse.xpdesigner.preferences.XPDEPreferencePage"
+          name="XPages Designer">
+    </page>
+ </extension>
 
 </plugin>
