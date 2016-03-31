@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: XDPE Publisher
+Bundle-SymbolicName: org.openntf.eclipse.xdpe.publisher;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.openntf.eclipse.xdpe.publisher.Activator
+Bundle-Vendor: WebGate Consulting AG
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.equinox.http.registry,
+ com.ibm.pvc.servlet,
+ com.ibm.xsp.extsn,
+ com.ibm.xsp.extlib.core,
+ com.ibm.domino.napi,
+ com.ibm.domino.osgi.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Import-Package: lotus.domino
+Export-Package: org.openntf.eclipse.xdpe.publisher

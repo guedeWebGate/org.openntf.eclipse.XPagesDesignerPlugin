@@ -31,7 +31,7 @@ public class JarPackageBuilder extends AbstractHandler {
 					ByteArrayOutputStream bos = PackageBuilder.INSTANCE.buildPackage(project);
 					//TODO: Customize this
 					Instructions instr = new Instructions("test/todo.nsf");
-					PackagePublisher publisher = new PackagePublisher("http://cgu_srv9/publish.nsf/services.xsp/publish", instr);
+					PackagePublisher publisher = new PackagePublisher("http://cgu_srv9/publisher.cmd", instr);
 					publisher.publish(bos, "John Builder/WGCDEV/CH", "buildIt");
 				} catch (Exception ex) {
 					ex.printStackTrace();
