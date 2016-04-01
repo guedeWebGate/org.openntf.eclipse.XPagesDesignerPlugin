@@ -11,7 +11,9 @@ Require-Bundle: org.eclipse.core.runtime,
  com.ibm.xsp.extsn,
  com.ibm.xsp.extlib.core,
  com.ibm.domino.napi,
- com.ibm.domino.osgi.core
+ com.ibm.domino.osgi.core,
+ org.apache.commons.codec,
+ org.apache.xerces
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: lotus.domino

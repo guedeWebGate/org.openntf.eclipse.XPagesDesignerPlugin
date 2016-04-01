@@ -122,14 +122,14 @@
             priority="normal">
       </content-type>
       <content-type
-            base-type="(org.eclipse.core.runtime.properties"
+            base-type="org.eclipse.core.runtime.properties"
             file-extensions="xde-application-properties"
             id="org.openntf.eclipse.xpdesigner.ui.application.properties"
             name="Application Properties"
             priority="normal">
       </content-type>
       <content-type
-            base-type="(org.eclipse.core.runtime.properties"
+            base-type="org.eclipse.core.runtime.properties"
             file-extensions="xde-server-properties"
             id="org.openntf.eclipse.xpdesigner.ui.server.properties"
             name="Server Properties"
@@ -156,9 +156,16 @@
             <contentTypeBinding
                contentTypeId="org.openntf.eclipse.xpdesigner.ui.application.properties"
             />
-            <contentTypeBinding
-                  contentTypeId="org.openntf.eclipse.xpdesigner.ui.server.properties">
-            </contentTypeBinding> 
+      </editor>
+      <editor
+            class="org.openntf.eclipse.xpdesigner.ui.editor.ServerPropertiesMPE"
+            default="true"
+            extensions="xde-server-properties"
+            id="org.openntf.eclipse.xpdesigner.ui.projectwizard.serverEditor"
+            name="XPages Server Properties">
+         <contentTypeBinding
+               contentTypeId="org.openntf.eclipse.xpdesigner.ui.server.properties">
+         </contentTypeBinding>
       </editor>
    </extension>
    <extension
