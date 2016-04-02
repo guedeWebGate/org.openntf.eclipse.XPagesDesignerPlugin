@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.openntf.eclipse.xdpe.publisher.feature_1.0.0.qualifier.jar" id="org.openntf.eclipse.xdpe.publisher.feature" version="1.0.0.qualifier">
+      <category name="OPENNTFXDPE-SERVER"/>
+   </feature>
+   <category-def name="OPENNTFXDPE-SERVER" label="XDPE-DominoServer"/>
+</site>

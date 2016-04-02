@@ -314,7 +314,10 @@
 			<modules>
 				<module>org.openntf.eclipse.xdpe.publisher</module>
 				<module>org.openntf.eclipse.xdpe.publisher.feature</module>
+				<module>org.openntf.eclipse.xdpe.publisher.p2</module>
 				<module>org.openntf.eclipse.xpdesigner.ui.projectwizard</module>
+				<module>org.openntf.eclipse.xpdesigner.feature</module>
+				<module>org.openntf.eclipse.xpdesigner.p2</module>
 			</modules>
 		</profile>
 		<profile>
@@ -322,10 +325,14 @@
 			<modules>
 				<module>org.openntf.eclipse.xdpe.publisher</module>
 				<module>org.openntf.eclipse.xdpe.publisher.feature</module>
+				<module>org.openntf.eclipse.xdpe.publisher.p2</module>
 				<module>org.openntf.eclipse.xpdesigner.ui.projectwizard</module>
+				<module>org.openntf.eclipse.xpdesigner.feature</module>
+				<module>org.openntf.eclipse.xpdesigner.p2</module>
 				<module>org.openntf.eclipse.xpdesigner.ui.pw-tests</module>
 			</modules>
-
 		</profile>
 	</profiles>
+	<modules>
+	</modules>
 </project>

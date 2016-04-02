@@ -25,3 +25,10 @@ org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.ui.pw-tests/target/
 org.openntf.xdpe.parent/org.openntf.eclipse.xdpe.publisher.feature/.project
 org.openntf.xdpe.parent/org.openntf.eclipse.xdpe.publisher.feature/.settings/
 org.openntf.xdpe.parent/org.openntf.eclipse.xdpe.publisher.feature/target/
+org.openntf.xdpe.parent/org.openntf.eclipse.xdpe.publisher.p2/.project
+org.openntf.xdpe.parent/org.openntf.eclipse.xdpe.publisher.p2/.settings/
+org.openntf.xdpe.parent/org.openntf.eclipse.xdpe.publisher.p2/target/
+org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.feature/.project
+org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.feature/.settings/
+org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.p2/.project
+org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.p2/.settings/
