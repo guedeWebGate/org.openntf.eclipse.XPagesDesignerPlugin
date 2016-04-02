@@ -20,3 +20,5 @@ org.openntf.xdpe.parent/org.openntf.eclipse.xdpe.publisher/.classpath
 org.openntf.xdpe.parent/.project
 org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.ui.projectwizard/target/MANIFEST.MF
 org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.ui.projectwizard/target/
+org.openntf.xdpe.parent/org.openntf.eclipse.xdpe.publisher/target/
+org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.ui.pw-tests/target/

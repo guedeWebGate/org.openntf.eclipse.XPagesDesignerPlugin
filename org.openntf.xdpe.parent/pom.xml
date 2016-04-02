@@ -1,17 +1,13 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.openntf.xdpe</groupId>
-  <artifactId>org.openntf.xdpe.parent</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>XDPE - XPages Designer Plugin 4 Eclipse - Parent</name>
-  <modules>
-  	<module>org.openntf.eclipse.xpdesigner.ui.projectwizard</module>
-  	<module>org.openntf.eclipse.xdpe.publisher</module>
-  	<module>org.openntf.eclipse.xpdesigner.ui.pw-tests</module>
-  </modules>
-  
-  	<properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.openntf.xdpe</groupId>
+	<artifactId>org.openntf.xdpe.parent</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>XDPE - XPages Designer Plugin 4 Eclipse - Parent</name>
+
+	<properties>
 		<tycho-version>0.22.0</tycho-version>
 		<compiler>1.6</compiler>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -308,5 +304,27 @@
 			<distribution>manual</distribution>
 		</license>
 	</licenses>
-  
+
+	<profiles>
+		<profile>
+			<id>defaultNoWizardTest</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<modules>
+				<module>org.openntf.eclipse.xpdesigner.ui.projectwizard</module>
+				<module>org.openntf.eclipse.xdpe.publisher</module>
+			</modules>
+
+		</profile>
+		<profile>
+			<id>wizardTest</id>
+			<modules>
+				<module>org.openntf.eclipse.xpdesigner.ui.projectwizard</module>
+				<module>org.openntf.eclipse.xdpe.publisher</module>
+				<module>org.openntf.eclipse.xpdesigner.ui.pw-tests</module>
+			</modules>
+
+		</profile>
+	</profiles>
 </project>
