@@ -312,16 +312,17 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<modules>
-				<module>org.openntf.eclipse.xpdesigner.ui.projectwizard</module>
 				<module>org.openntf.eclipse.xdpe.publisher</module>
+				<module>org.openntf.eclipse.xdpe.publisher.feature</module>
+				<module>org.openntf.eclipse.xpdesigner.ui.projectwizard</module>
 			</modules>
-
 		</profile>
 		<profile>
 			<id>wizardTest</id>
 			<modules>
-				<module>org.openntf.eclipse.xpdesigner.ui.projectwizard</module>
 				<module>org.openntf.eclipse.xdpe.publisher</module>
+				<module>org.openntf.eclipse.xdpe.publisher.feature</module>
+				<module>org.openntf.eclipse.xpdesigner.ui.projectwizard</module>
 				<module>org.openntf.eclipse.xpdesigner.ui.pw-tests</module>
 			</modules>
 

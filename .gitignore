@@ -22,3 +22,6 @@ org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.ui.projectwizard/target/M
 org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.ui.projectwizard/target/
 org.openntf.xdpe.parent/org.openntf.eclipse.xdpe.publisher/target/
 org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.ui.pw-tests/target/
+org.openntf.xdpe.parent/org.openntf.eclipse.xdpe.publisher.feature/.project
+org.openntf.xdpe.parent/org.openntf.eclipse.xdpe.publisher.feature/.settings/
+org.openntf.xdpe.parent/org.openntf.eclipse.xdpe.publisher.feature/target/
