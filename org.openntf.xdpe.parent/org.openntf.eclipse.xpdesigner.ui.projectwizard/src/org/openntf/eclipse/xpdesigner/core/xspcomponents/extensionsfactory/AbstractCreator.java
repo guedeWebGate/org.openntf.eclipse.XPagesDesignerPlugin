@@ -62,7 +62,6 @@ public abstract class AbstractCreator implements IXDEExtensionCreator {
 					}
 				}
 			}
-			System.out.println(tagName);
 			if ("icon".equals(tagName)) {
 				if (extElement.hasNoIcon()) {
 					XDEIcon icon = buildIcon(child, registryAnnotaterInfo);
@@ -77,7 +76,6 @@ public abstract class AbstractCreator implements IXDEExtensionCreator {
 	}
 
 	private XDEIcon buildIcon(Element child, RegistryAnnotaterInfo registryAnnotaterInfo) {
-		System.out.println("Building icon");
 		String smallIcon = getChildNodeStringValue(child, "small-icon");
 		String largeIcon = getChildNodeStringValue(child, "large-icon");
 		URL smallIconURL = buildIconURL(smallIcon, registryAnnotaterInfo);

@@ -19,8 +19,7 @@ import org.osgi.framework.ServiceReference;
 public enum TargetPlatformBuilder {
 	INSTANCE;
 
-	public void buildTargetPlatformP2AndServer(String p2Directory, String dataDirectory)
-			throws CoreException, InterruptedException {
+	public void buildTargetPlatformP2AndServer(String p2Directory, String dataDirectory) throws CoreException, InterruptedException {
 		BundleContext bc = Activator.getDefault().getBundle().getBundleContext();
 		ServiceReference<ITargetPlatformService> ref = bc.getServiceReference(ITargetPlatformService.class);
 
@@ -37,10 +36,8 @@ public enum TargetPlatformBuilder {
 		}
 		List<ITargetLocation> bundleContainers = new ArrayList<ITargetLocation>();
 		bundleContainers.add(tpService.newDirectoryLocation("${eclipse_home}"));
-		bundleContainers.add(tpService.newDirectoryLocation(
-				p2Directory ));
-		bundleContainers.add(tpService.newDirectoryLocation(dataDirectory + File.separator + "domino" + File.separator
-				+ "workspace" + File.separator + "applications" + File.separator + "eclipse"));
+		bundleContainers.add(tpService.newDirectoryLocation(p2Directory));
+		bundleContainers.add(tpService.newDirectoryLocation(dataDirectory + File.separator + "domino" + File.separator + "workspace" + File.separator + "applications" + File.separator + "eclipse"));
 
 		targetDef.setTargetLocations(bundleContainers.toArray(new ITargetLocation[bundleContainers.size()]));
 		targetDef.setArch(Platform.getOSArch());
@@ -53,5 +50,24 @@ public enum TargetPlatformBuilder {
 		Job job = new LoadTargetDefinitionJob(targetDef);
 		job.schedule();
 		job.join();
+	}
+
+	public ITargetDefinition getActiveTargetDefinition() {
+		BundleContext bc = Activator.getDefault().getBundle().getBundleContext();
+		ServiceReference<ITargetPlatformService> ref = bc.getServiceReference(ITargetPlatformService.class);
+
+		ITargetPlatformService tpService = bc.getService(ref);
+		ITargetDefinition targetDef = null;
+		try {
+			for (ITargetHandle def : tpService.getTargets(null)) {
+				if ("XPDE-Server".equals(def.getTargetDefinition().getName())) {
+					targetDef = def.getTargetDefinition();
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return targetDef;
+
 	}
 }

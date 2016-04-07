@@ -7,5 +7,5 @@
   </parent>
   <artifactId>org.openntf.eclipse.xpdesigner.p2</artifactId>
   <packaging>eclipse-repository</packaging>
-  <name>XPages Designer Plugin 4 Eclipse</name>
+  <name>XPages Designer Plugin 4 Eclipse P2 Repo</name>
 </project>

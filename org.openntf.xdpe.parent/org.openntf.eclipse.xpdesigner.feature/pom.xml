@@ -7,5 +7,5 @@
   </parent>
   <artifactId>org.openntf.eclipse.xpdesigner.feature</artifactId>
   <packaging>eclipse-feature</packaging>
-  <name>XPages Designer Plugin 4 Eclipse</name>
+  <name>XPages Designer Plugin 4 Eclipse Feature</name>
 </project>

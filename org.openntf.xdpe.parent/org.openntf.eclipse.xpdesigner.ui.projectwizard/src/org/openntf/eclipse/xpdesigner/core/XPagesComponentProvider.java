@@ -1,5 +1,7 @@
 package org.openntf.eclipse.xpdesigner.core;
 
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,14 +13,19 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.osgi.service.resolver.BundleSpecification;
 import org.eclipse.pde.core.plugin.IPluginBase;
 import org.eclipse.pde.core.plugin.IPluginElement;
 import org.eclipse.pde.core.plugin.IPluginExtension;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.core.plugin.IPluginObject;
 import org.eclipse.pde.core.plugin.PluginRegistry;
+import org.eclipse.pde.core.target.ITargetDefinition;
+import org.eclipse.pde.core.target.TargetBundle;
+import org.openntf.eclipse.xpdesigner.core.loaders.TargetBundleClassLoader;
 import org.openntf.eclipse.xpdesigner.core.xdecomponents.XDEComponentElement;
 import org.openntf.eclipse.xpdesigner.core.xdecomponents.XDELibrary;
+import org.openntf.eclipse.xpdesigner.ui.projectwizard.Activator;
 import org.osgi.framework.Bundle;
 
 import com.ibm.commons.util.StringUtil;
@@ -42,8 +49,11 @@ public enum XPagesComponentProvider {
 			m_Manager = XspRegistryManager.getManager();
 			List<XDELibrary> libraries = new LinkedList<XDELibrary>();
 			IPluginModelBase[] base = PluginRegistry.getActiveModels(false);
+			ITargetDefinition activeTargetDefinition = TargetPlatformBuilder.INSTANCE.getActiveTargetDefinition();
+			Activator.getDefault().log("Activate Target Definition: " + activeTargetDefinition == null ? " not found!" : activeTargetDefinition.getName());
 			for (IPluginModelBase element : base) {
 				IPluginBase pbase = element.getPluginBase();
+
 				for (IPluginExtension pex : pbase.getExtensions()) {
 					if (pex.getPoint().startsWith("com.ibm.commons.Extension")) {
 						for (IPluginObject pexChild : pex.getChildren()) {
@@ -51,24 +61,31 @@ public enum XPagesComponentProvider {
 								IPluginElement pexElement = (IPluginElement) pexChild;
 								if ("service".equals(pexElement.getName()) && pexElement.getAttribute("type") != null
 										&& "com.ibm.xsp.Library".equalsIgnoreCase(pexElement.getAttribute("type").getValue())) {
+									Activator.getDefault().log("Reading Plugin: " + pbase.getId() + " - " + pbase.getVersion() + " / " + pbase.isValid());
 									String className = pexElement.getAttribute("class").getValue();
+									Activator.getDefault().log("---> class is " + className);
 									Class<?> cl = null;
+
 									try {
 										Bundle bdl = Platform.getBundle(pbase.getId());
-
-										try {
-											bdl.start();
-										} catch (Exception e) {
-											e.printStackTrace();
+										if (bdl != null) {
+											try {
+												bdl.start();
+											} catch (Exception e) {
+												e.printStackTrace();
+											}
+											cl = bdl.loadClass(className);
+										} else {
+											Activator.getDefault().log("No Bundle");
+											cl = findClassfromTargetDefinition(pbase, activeTargetDefinition, className);
 										}
-										cl = bdl.loadClass(className);
-										XspLibrary lib = (XspLibrary) cl.newInstance();
-										XDELibrary library = new XDELibrary(pbase.getId(), pexElement.getAttribute("class").getValue(), lib);
+										Object lib = cl.newInstance();
+										XDELibrary library = new XDELibrary(pbase.getId(), pexElement.getAttribute("class").getValue(), (XspLibrary) lib);
 										libraries.add(library);
+										Activator.getDefault().log("---> " + lib.getClass().getName() + " loaded!");
 
 									} catch (Exception ex) {
-										ex.printStackTrace();
-										System.out.println(className + " - not loaded..." + cl);
+										Activator.getDefault().logException(ex);
 									}
 								}
 							}
@@ -83,6 +100,60 @@ public enum XPagesComponentProvider {
 		return m_Libraries;
 	}
 
+	private Class<?> findClassfromTargetDefinition(IPluginBase pbase, ITargetDefinition activeTargetDefinition, String className) {
+		Class<?> cl = null;
+		Set<String> dependecies = buildDependencies(pbase.getPluginModel(), pbase.getId());
+		List<TargetBundle> tBundles = new ArrayList<TargetBundle>();
+		if (!activeTargetDefinition.isResolved()) {
+			activeTargetDefinition.resolve(null);
+		}
+		for (TargetBundle bundle : activeTargetDefinition.getBundles()) {
+			String bundleId = bundle.getBundleInfo().getSymbolicName();
+			if (dependecies.contains(bundleId)) {
+				tBundles.add(bundle);
+			}
+		}
+		if (!tBundles.isEmpty()) {
+			Activator.getDefault().log("Loading" + pbase.getId() + " with " + tBundles.size() + " bundles");
+			Set<URI> allBundles = new HashSet<URI>();
+			for (TargetBundle tbundle : tBundles) {
+				allBundles.add(tbundle.getBundleInfo().getLocation());
+			}
+			try {
+				TargetBundleClassLoader targetBundleCL = new TargetBundleClassLoader(new ArrayList<URI>(allBundles), Thread.currentThread().getContextClassLoader());
+				cl = targetBundleCL.loadClass(className);
+				Activator.getDefault().log(className + " ---> " + cl);
+			} catch (ClassNotFoundException e) {
+				Activator.getDefault().logException(e);
+			} catch (MalformedURLException e) {
+				Activator.getDefault().logException(e);
+			}
+		} else {
+			Activator.getDefault().log(pbase.getId() + " not found!");
+
+		}
+		return cl;
+	}
+
+	private Set<String> buildDependencies(IPluginModelBase model, String id) {
+		Set<String> depend = new HashSet<String>();
+		depend.add(id);
+		addDependencies(model.getBundleDescription().getRequiredBundles(), depend);
+		return depend;
+	}
+
+	private void addDependencies(BundleSpecification[] bundlesSpecs, Set<String> depend) {
+		if (bundlesSpecs == null) {
+			return;
+		}
+		for (BundleSpecification spec : bundlesSpecs) {
+			String name = spec.getName();
+			if (!depend.contains(name) && !spec.isOptional()) {
+				depend.add(name);
+			}
+		}
+	}
+
 	private List<XDELibrary> sortLibraries(List<XDELibrary> libraries) {
 		List<XDELibrary> listRC = new ArrayList<XDELibrary>();
 		for (XDELibrary lib : libraries) {
@@ -90,7 +161,6 @@ public enum XPagesComponentProvider {
 			Set<String> deps = getDependencies(lib, setTemp, libraries);
 			int nPosition = 0;
 			for (String depID : deps) {
-				System.out.println(lib.getLib().getLibraryId() + " search for:" + depID);
 				nPosition = Math.max(nPosition, getPosition(depID, listRC) + 1);
 			}
 			listRC.add(nPosition, lib);
@@ -119,7 +189,7 @@ public enum XPagesComponentProvider {
 		for (String depID : lstDep) {
 			XDELibrary libNew = getLibraryByID(depID, libraries);
 			if (libNew == null) {
-				System.out.println("!!!! " + depID + "not found!");
+				// System.out.println("!!!! " + depID + "not found!");
 
 			} else {
 				if (!full.contains(libNew.getLib().getLibraryId())) {
@@ -168,7 +238,7 @@ public enum XPagesComponentProvider {
 				return;
 			}
 		}
-		System.out.println("add " + provider.getId() + " to XSPManager");
+		// System.out.println("add " + provider.getId() + " to XSPManager");
 		m_Manager.setRegistryProvider(provider.getId(), provider);
 	}
 
@@ -185,7 +255,7 @@ public enum XPagesComponentProvider {
 					}
 					List<FacesComponentDefinition> list;
 					if (!m_ComponentsByCategory.containsKey(cat)) {
-						System.out.println("New cat generated: " + cat);
+						// System.out.println("New cat generated: " + cat);
 						list = new LinkedList<FacesComponentDefinition>();
 						list.add(def);
 						m_ComponentsByCategory.put(cat, list);

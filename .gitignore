@@ -32,3 +32,5 @@ org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.feature/.project
 org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.feature/.settings/
 org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.p2/.project
 org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.p2/.settings/
+org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.feature/target/
+org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.p2/target/

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.opennf.eclipse.xpdesigner.feature"
+      id="org.openntf.eclipse.xpdesigner.feature"
       label="XPages Designer Plugin 4 Eclipse Feature"
       version="1.0.0.qualifier"
       provider-name="WebGate Consulting AG">
@@ -20,17 +20,6 @@
       <import plugin="org.eclipse.wst.sse.ui"/>
       <import plugin="org.eclipse.wst.xml.core"/>
       <import plugin="org.eclipse.wst.xml.ui"/>
-      <import plugin="com.ibm.designer.runtime"/>
-      <import plugin="com.ibm.domino.napi"/>
-      <import plugin="com.ibm.commons"/>
-      <import plugin="com.ibm.xsp.core"/>
-      <import plugin="com.ibm.xsp.extsn"/>
-      <import plugin="com.ibm.xsp.designer"/>
-      <import plugin="com.ibm.xsp.domino"/>
-      <import plugin="com.ibm.xsp.extlib"/>
-      <import plugin="com.ibm.commons.vfs"/>
-      <import plugin="com.ibm.domino.xsp.bootstrap"/>
-      <import plugin="com.ibm.domino.xsp.adapter.nsf"/>
       <import plugin="org.eclipse.wst.jsdt.core"/>
       <import plugin="org.eclipse.wst.jsdt.ui"/>
       <import plugin="org.eclipse.wst.css.core"/>
