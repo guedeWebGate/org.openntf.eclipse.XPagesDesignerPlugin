@@ -2,7 +2,6 @@ package org.openntf.eclipse.xpdesigner.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
-
 import org.openntf.eclipse.xpdesigner.ui.projectwizard.Activator;
 
 /**

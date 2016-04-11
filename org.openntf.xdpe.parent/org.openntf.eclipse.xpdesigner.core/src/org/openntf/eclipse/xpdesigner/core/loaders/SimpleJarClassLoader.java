@@ -42,6 +42,7 @@ public class SimpleJarClassLoader extends ClassLoader {
 		}
 		IContentReader cntReader = buildContentReader();
 		try {
+			
 			JarInputStream jarFileStream = cntReader.buildInputStreamReader();
 			JarEntry entry = jarFileStream.getNextJarEntry();
 			while (entry != null) {

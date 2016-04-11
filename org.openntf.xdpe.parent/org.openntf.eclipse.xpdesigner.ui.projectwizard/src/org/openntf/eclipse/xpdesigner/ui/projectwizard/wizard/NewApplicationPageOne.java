@@ -2,6 +2,7 @@ package org.openntf.eclipse.xpdesigner.ui.projectwizard.wizard;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.wizard.WizardPage;
@@ -18,7 +19,6 @@ import org.eclipse.swt.widgets.Text;
 import org.openntf.eclipse.xpdesigner.ui.projectwizard.ServerDefinitionSupport;
 import org.openntf.eclipse.xpdesigner.ui.projectwizard.XPagesProjectSupport;
 
-import com.ibm.commons.util.StringUtil;
 
 public class NewApplicationPageOne extends WizardPage {
 	private static final String REGEX_PATTERN_APPNAME = "^[A-Za-z0-9_]+$";
@@ -103,13 +103,13 @@ public class NewApplicationPageOne extends WizardPage {
 	}
 
 	protected void validate() {
-		if (!StringUtil.isEmpty(m_ApplicationName.getText()) && !m_ApplicationName.getText().matches(REGEX_PATTERN_APPNAME)) {
+		if (!StringUtils.isEmpty(m_ApplicationName.getText()) && !m_ApplicationName.getText().matches(REGEX_PATTERN_APPNAME)) {
 			setMessage("A name must start with a letter or underscore (_) and can only contain numbers, letters and underscores (_).", DialogPage.ERROR);
 			setPageComplete(false);
 			return;
 		}
 
-		if (!StringUtil.isEmpty(m_PathToNSF.getText()) && !m_PathToNSF.getText().toLowerCase().endsWith(".nsf")) {
+		if (!StringUtils.isEmpty(m_PathToNSF.getText()) && !m_PathToNSF.getText().toLowerCase().endsWith(".nsf")) {
 			setMessage("The path must end with .nsf", DialogPage.ERROR);
 			setPageComplete(false);
 			return;
