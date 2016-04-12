@@ -7,9 +7,10 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.openntf.eclipse.xpdesigner.core.XDPEComponentLoaderImpl;
 import org.openntf.eclipse.xpdesigner.core.XPagesComponentProvider;
 
+import com.ibm.xsp.FacesExceptionEx;
+import com.ibm.xsp.page.FacesPageException;
 import com.ibm.xsp.page.compiled.PageToClassNameUtil;
 import com.ibm.xsp.page.parse.ComponentElement;
 import com.ibm.xsp.page.parse.FacesDeserializer;
@@ -21,17 +22,10 @@ import com.ibm.xsp.registry.FacesSharableRegistry;
 
 public class XSPClassBuilder {
 
-	private final XDPEComponentLoaderImpl loader;
 
-	public XSPClassBuilder() {
-		loader =null;
-	}
-	public XSPClassBuilder(XDPEComponentLoaderImpl loader) {
-		this.loader = loader;
-	}
 
-	public XSPClass compileFile(Object ofile) throws CoreException, IOException {
-		FacesSharableRegistry reg = loader != null? loader.getRegistry(): XPagesComponentProvider.INSTANCE.getRegistry();
+	public XSPClass compileFile(Object ofile) throws CoreException, IOException, FacesExceptionEx {
+		FacesSharableRegistry reg = XPagesComponentProvider.INSTANCE.getRegistry();
 		Map<String, Object> options = new HashMap<String, Object>();
 		// allowNamespacedMarkupTags defaults to true in FacesDeserializer
 		// but defaults to false in the design-time code.

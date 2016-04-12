@@ -37,4 +37,14 @@ Bundle-ClassPath: .,
  lib/httpclient-4.5.2.jar,
  lib/httpcore-4.4.4.jar,
  lib/httpmime-4.5.2.jar,
- lib/jcl-core-2.5.jar
+ lib/jcl-core-2.5.jar,
+ lib/commons-lang3-3.3.2.jar
+Export-Package: org.openntf.eclipse.xpdesigner.core,
+ org.openntf.eclipse.xpdesigner.preferences,
+ org.openntf.eclipse.xpdesigner.ui.commands,
+ org.openntf.eclipse.xpdesigner.ui.editor,
+ org.openntf.eclipse.xpdesigner.ui.natures,
+ org.openntf.eclipse.xpdesigner.ui.projectwizard,
+ org.openntf.eclipse.xpdesigner.ui.projectwizard.popup.actions,
+ org.openntf.eclipse.xpdesigner.ui.projectwizard.wizard,
+ org.openntf.eclipse.xpdesigner.ui.views

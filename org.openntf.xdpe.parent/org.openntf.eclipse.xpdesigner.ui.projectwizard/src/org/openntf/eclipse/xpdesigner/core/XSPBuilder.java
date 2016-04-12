@@ -1,8 +1,6 @@
 package org.openntf.eclipse.xpdesigner.core;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -19,15 +17,6 @@ import org.openntf.eclipse.xpdesigner.core.compiler.XSPClassBuilder;
 import org.openntf.eclipse.xpdesigner.ui.natures.ProjectNature;
 import org.openntf.eclipse.xpdesigner.ui.projectwizard.Activator;
 import org.openntf.eclipse.xpdesigner.ui.projectwizard.XSPFileBuilder;
-
-import com.ibm.xsp.page.compiled.PageToClassNameUtil;
-import com.ibm.xsp.page.parse.ComponentElement;
-import com.ibm.xsp.page.parse.FacesDeserializer;
-import com.ibm.xsp.page.parse.FacesReader;
-import com.ibm.xsp.page.translator.LogicalPage;
-import com.ibm.xsp.page.translator.PhysicalPage;
-import com.ibm.xsp.page.translator.Translator;
-import com.ibm.xsp.registry.FacesSharableRegistry;
 
 public class XSPBuilder extends IncrementalProjectBuilder {
 	public static final String BUILDER_ID = "org.openntf.eclipse.xpdesigner.core.XSPBuilder";
@@ -110,8 +99,8 @@ public class XSPBuilder extends IncrementalProjectBuilder {
 
 	private void compileFile(IFile file) throws CoreException, IOException {
 
-		XSPClassBuilder classBuilder = new XSPClassBuilder();
-		XSPClass xspClass = classBuilder.compileFile(file);
+		CoreActivator.getDefault().log("Ready to use XSPClassBuilder!");
+		XSPClass xspClass=XDECommandWrapper.INSTANCE.compileFile(file);
 		if (xspClass == null) {
 			Activator.getDefault().log("No xspClass build for " + file);
 		}

@@ -6,7 +6,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
-import org.openntf.eclipse.xpdesigner.core.XDPEComponentProvider;
+import org.openntf.eclipse.xpdesigner.core.XPagesComponentProvider;
 import org.openntf.eclipse.xpdesigner.ui.projectwizard.Activator;
 
 public class XDEVisualEditor4XSP extends GraphicalEditorWithFlyoutPalette {
@@ -30,7 +30,7 @@ public class XDEVisualEditor4XSP extends GraphicalEditorWithFlyoutPalette {
 
 	private PaletteRoot buildRoot() {
 		try {
-			return XDPEComponentProvider.getInstance().buildPaletteRoot();
+			return XPagesComponentProvider.INSTANCE.buildPaletteRoot();
 		} catch (MalformedURLException e) {
 			Activator.getDefault().logException(e);
 		}

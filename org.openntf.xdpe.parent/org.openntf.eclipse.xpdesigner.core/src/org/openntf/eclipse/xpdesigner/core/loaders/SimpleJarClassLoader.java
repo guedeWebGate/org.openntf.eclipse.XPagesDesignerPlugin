@@ -3,7 +3,6 @@ package org.openntf.eclipse.xpdesigner.core.loaders;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -13,7 +12,7 @@ import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
 
-import org.openntf.eclipse.xpdesigner.ui.projectwizard.Activator;
+import org.openntf.eclipse.xpdesigner.core.CoreActivator;
 
 public class SimpleJarClassLoader extends ClassLoader {
 
@@ -61,7 +60,7 @@ public class SimpleJarClassLoader extends ClassLoader {
 			}
 
 		} catch (Exception e) {
-			Activator.getDefault().logException(e);
+			CoreActivator.getDefault().logException(e);
 			return null;
 		} finally {
 			try {

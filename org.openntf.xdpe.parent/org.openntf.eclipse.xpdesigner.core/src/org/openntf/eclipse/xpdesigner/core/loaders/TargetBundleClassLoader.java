@@ -17,7 +17,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-import org.openntf.eclipse.xpdesigner.ui.projectwizard.Activator;
+import org.openntf.eclipse.xpdesigner.core.CoreActivator;
 
 public class TargetBundleClassLoader extends URLClassLoader {
 
@@ -41,7 +41,7 @@ public class TargetBundleClassLoader extends URLClassLoader {
 		Manifest mf = null;
 		JarFile jf = null;
 		Set<URL> urls = new HashSet<URL>();
-		File fileTempDir = new File(Activator.getDefault().getNewTempSubDir(symbolicName));
+		File fileTempDir = new File(CoreActivator.getDefault().getNewTempSubDir(symbolicName));
 		try {
 			File file = new File(bundleURI);
 			if (file.isDirectory()) {
@@ -59,15 +59,15 @@ public class TargetBundleClassLoader extends URLClassLoader {
 			}
 
 		} catch (MalformedURLException e) {
-			Activator.getDefault().logException(e);
+			CoreActivator.getDefault().logException(e);
 		} catch (IOException e) {
-			Activator.getDefault().logException(e);
+			CoreActivator.getDefault().logException(e);
 		} finally {
 			if (jf != null) {
 				try {
 					jf.close();
 				} catch (Exception e) {
-					Activator.getDefault().logException(e);
+					CoreActivator.getDefault().logException(e);
 				}
 			}
 		}
@@ -94,10 +94,10 @@ public class TargetBundleClassLoader extends URLClassLoader {
 							is.close();
 							urls.add(target.toURI().toURL());
 						} catch (Exception ex) {
-							Activator.getDefault().logException(ex);
+							CoreActivator.getDefault().logException(ex);
 						}
 					} else {
-						Activator.getDefault().log("INFO: " + cp + " not found!");
+						CoreActivator.getDefault().log("INFO: " + cp + " not found!");
 					}
 				}
 			}
@@ -115,12 +115,12 @@ public class TargetBundleClassLoader extends URLClassLoader {
 					try {
 						urls.add(jFile.toURI().toURL());
 					} catch (MalformedURLException e) {
-						Activator.getDefault().log("Could not load " + path);
+						CoreActivator.getDefault().log("Could not load " + path);
 					}
 				}
 			}
 		}
 
 	}
-	
+
 }

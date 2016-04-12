@@ -12,7 +12,6 @@ import org.eclipse.pde.core.target.ITargetHandle;
 import org.eclipse.pde.core.target.ITargetLocation;
 import org.eclipse.pde.core.target.ITargetPlatformService;
 import org.eclipse.pde.core.target.LoadTargetDefinitionJob;
-import org.openntf.eclipse.xpdesigner.ui.projectwizard.Activator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
@@ -20,7 +19,7 @@ public enum TargetPlatformBuilder {
 	INSTANCE;
 
 	public void buildTargetPlatformP2AndServer(String p2Directory, String dataDirectory) throws CoreException, InterruptedException {
-		BundleContext bc = Activator.getDefault().getBundle().getBundleContext();
+		BundleContext bc = CoreActivator.getDefault().getBundleContext();
 		ServiceReference<ITargetPlatformService> ref = bc.getServiceReference(ITargetPlatformService.class);
 
 		ITargetPlatformService tpService = bc.getService(ref);
@@ -53,7 +52,7 @@ public enum TargetPlatformBuilder {
 	}
 
 	public ITargetDefinition getActiveTargetDefinition() {
-		BundleContext bc = Activator.getDefault().getBundle().getBundleContext();
+		BundleContext bc = CoreActivator.getDefault().getBundleContext();
 		ServiceReference<ITargetPlatformService> ref = bc.getServiceReference(ITargetPlatformService.class);
 
 		ITargetPlatformService tpService = bc.getService(ref);

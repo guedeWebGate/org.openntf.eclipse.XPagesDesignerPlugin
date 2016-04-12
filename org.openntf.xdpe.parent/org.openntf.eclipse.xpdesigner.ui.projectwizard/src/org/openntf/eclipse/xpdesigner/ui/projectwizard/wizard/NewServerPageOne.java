@@ -1,5 +1,6 @@
 package org.openntf.eclipse.xpdesigner.ui.projectwizard.wizard;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -11,8 +12,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.openntf.eclipse.xpdesigner.ui.projectwizard.ServerDefinitionSupport;
-
-import com.ibm.commons.util.StringUtil;
 
 public class NewServerPageOne extends WizardPage {
 	private static final String REGEX_PATTERN_SERVERNAME = "^[A-Za-z0-9_]+$";
@@ -92,7 +91,7 @@ public class NewServerPageOne extends WizardPage {
 			setPageComplete(false);
 			return;
 		}
-		if (!StringUtil.isEmpty(m_ServerName.getText()) && ServerDefinitionSupport.INSTANCE.checkHasServerName(m_ServerName.getText())) {
+		if (!StringUtils.isEmpty(m_ServerName.getText()) && ServerDefinitionSupport.INSTANCE.checkHasServerName(m_ServerName.getText())) {
 			setMessage("A server with this name already exists.");
 			setPageComplete(false);
 			return;

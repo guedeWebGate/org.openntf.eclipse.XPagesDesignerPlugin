@@ -34,7 +34,7 @@ public class XPageProjectPageOne extends WizardNewProjectCreationPage {
 		List<XDELibrary> allLibs = XPagesComponentProvider.INSTANCE.scanPlugins4XSPLibraries();
 		for (XDELibrary lib : allLibs) {
 			TableItem item = new TableItem(m_Table, SWT.NONE);
-			item.setText(lib.getLib().getLibraryId());
+			item.setText(lib.getLibraryID());
 			item.setData(lib);
 		}
 		m_Table.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

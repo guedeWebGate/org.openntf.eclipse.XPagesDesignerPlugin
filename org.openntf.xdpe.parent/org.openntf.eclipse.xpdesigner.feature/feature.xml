@@ -26,10 +26,25 @@
       <import plugin="org.eclipse.wst.css.ui"/>
       <import plugin="org.eclipse.gef"/>
       <import plugin="org.eclipse.osgi"/>
+      <import plugin="org.eclipse.ui.console"/>
+      <import plugin="org.eclipse.equinox.frameworkadmin"/>
+      <import plugin="org.eclipse.core.jobs"/>
+      <import plugin="org.eclipse.equinox.registry"/>
+      <import plugin="org.eclipse.core.commands"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.ui.workbench"/>
+      <import plugin="org.eclipse.swt"/>
    </requires>
 
    <plugin
          id="org.openntf.eclipse.xpdesigner.ui.projectwizard"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.openntf.eclipse.xpdesigner.core"
          download-size="0"
          install-size="0"
          version="0.0.0"

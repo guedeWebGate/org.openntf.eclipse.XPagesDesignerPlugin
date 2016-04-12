@@ -32,7 +32,6 @@ import org.openntf.eclipse.xpdesigner.core.loaders.TargetBundleClassLoader;
 import org.openntf.eclipse.xpdesigner.core.xdecomponents.ExtensionCreatorFactory;
 import org.openntf.eclipse.xpdesigner.core.xdecomponents.XDEComponentElement;
 import org.openntf.eclipse.xpdesigner.core.xdecomponents.XDELibrary;
-import org.openntf.eclipse.xpdesigner.ui.projectwizard.Activator;
 import org.osgi.framework.Bundle;
 
 import com.ibm.commons.util.StringUtil;
@@ -48,7 +47,7 @@ public enum XPagesComponentProvider {
 	INSTANCE;
 
 	private List<XDELibrary> m_Libraries;
-	private Map<String,XspLibrary> xspLibraryMap = new HashMap<String, XspLibrary>();
+	private Map<String, XspLibrary> xspLibraryMap = new HashMap<String, XspLibrary>();
 	private XspRegistryManager m_Manager;
 	private Map<String, List<FacesComponentDefinition>> m_ComponentsByCategory;
 
@@ -59,7 +58,7 @@ public enum XPagesComponentProvider {
 		for (IPluginModelBase element : base) {
 			IPluginBase pbase = element.getPluginBase();
 			if (pluginIds.contains(pbase.getId())) {
-				Activator.getDefault().log("Loading Dependencies for " + pbase.getId());
+				CoreActivator.getDefault().log("Loading Dependencies for " + pbase.getId());
 				Set<String> dependecies = buildDependencies(pbase.getPluginModel(), pbase.getId());
 				allDependencies.addAll(dependecies);
 			}
@@ -69,8 +68,8 @@ public enum XPagesComponentProvider {
 		}
 		List<TargetBundle> tBundles = collectTargetBundles(activeTargetDefinition, allDependencies);
 		List<URI> allBundles = buildURIListFromTargetBundles(tBundles);
-		Activator.getDefault().log("All bundles has " + allBundles.size() + " entries.");
-		TargetBundleClassLoader targetBundleCL = new TargetBundleClassLoader(allBundles, Thread.currentThread().getContextClassLoader(), Activator.PLUGIN_ID + "-mainCL");
+		CoreActivator.getDefault().log("All bundles has " + allBundles.size() + " entries.");
+		TargetBundleClassLoader targetBundleCL = new TargetBundleClassLoader(allBundles, Thread.currentThread().getContextClassLoader(), CoreActivator.PLUGIN_ID + "-mainCL");
 		return targetBundleCL;
 	}
 
@@ -79,7 +78,7 @@ public enum XPagesComponentProvider {
 			try {
 				loadLibraries();
 			} catch (Exception ex) {
-				Activator.getDefault().logException(ex);
+				CoreActivator.getDefault().logException(ex);
 			}
 		}
 		return m_Libraries;
@@ -90,7 +89,7 @@ public enum XPagesComponentProvider {
 		List<XDELibrary> libraries = new LinkedList<XDELibrary>();
 		IPluginModelBase[] base = PluginRegistry.getActiveModels(false);
 		ITargetDefinition activeTargetDefinition = TargetPlatformBuilder.INSTANCE.getActiveTargetDefinition();
-		Activator.getDefault().log("Activate Target Definition: " + activeTargetDefinition == null ? " not found!" : activeTargetDefinition.getName());
+		CoreActivator.getDefault().log("Activate Target Definition: " + activeTargetDefinition == null ? " not found!" : activeTargetDefinition.getName());
 		for (IPluginModelBase element : base) {
 			IPluginBase pbase = element.getPluginBase();
 
@@ -101,9 +100,9 @@ public enum XPagesComponentProvider {
 							IPluginElement pexElement = (IPluginElement) pexChild;
 							if ("service".equals(pexElement.getName()) && pexElement.getAttribute("type") != null
 									&& "com.ibm.xsp.Library".equalsIgnoreCase(pexElement.getAttribute("type").getValue())) {
-								Activator.getDefault().log("Reading Plugin: " + pbase.getId() + " - " + pbase.getVersion() + " / " + pbase.isValid());
+								CoreActivator.getDefault().log("Reading Plugin: " + pbase.getId() + " - " + pbase.getVersion() + " / " + pbase.isValid());
 								String className = pexElement.getAttribute("class").getValue();
-								Activator.getDefault().log("---> class is " + className);
+								CoreActivator.getDefault().log("---> class is " + className);
 								Class<?> cl = null;
 
 								try {
@@ -116,16 +115,17 @@ public enum XPagesComponentProvider {
 										}
 										cl = bdl.loadClass(className);
 									} else {
-										Activator.getDefault().log("No Bundle");
+										CoreActivator.getDefault().log("No Bundle");
 										cl = findClassfromTargetDefinition(pbase, activeTargetDefinition, className);
 									}
 									Object lib = cl.newInstance();
-									XDELibrary library = new XDELibrary(pbase.getId(), pexElement.getAttribute("class").getValue(), (XspLibrary) lib);
+									XDELibrary library = new XDELibrary(pbase.getId(), pexElement.getAttribute("class").getValue(), ((XspLibrary) lib).getLibraryId());
+									xspLibraryMap.put(((XspLibrary) lib).getLibraryId(), (XspLibrary) lib);
 									libraries.add(library);
-									Activator.getDefault().log("---> " + lib.getClass().getName() + " loaded!");
+									CoreActivator.getDefault().log("---> " + lib.getClass().getName() + " loaded!");
 
 								} catch (Exception ex) {
-									Activator.getDefault().logException(ex);
+									CoreActivator.getDefault().logException(ex);
 								}
 							}
 						}
@@ -146,20 +146,20 @@ public enum XPagesComponentProvider {
 		}
 		List<TargetBundle> tBundles = collectTargetBundles(activeTargetDefinition, dependecies);
 		if (!tBundles.isEmpty()) {
-			Activator.getDefault().log("Loading " + pbase.getId() + " with " + tBundles.size() + " bundles");
+			CoreActivator.getDefault().log("Loading " + pbase.getId() + " with " + tBundles.size() + " bundles");
 			List<URI> allBundles = buildURIListFromTargetBundles(tBundles);
-			Activator.getDefault().log("All bundles has " + allBundles.size() + " entries.");
+			CoreActivator.getDefault().log("All bundles has " + allBundles.size() + " entries.");
 			try {
 				TargetBundleClassLoader targetBundleCL = new TargetBundleClassLoader(allBundles, Thread.currentThread().getContextClassLoader(), pbase.getId());
 				cl = targetBundleCL.loadClass(className);
-				Activator.getDefault().log(className + " ---> " + cl);
+				CoreActivator.getDefault().log(className + " ---> " + cl);
 			} catch (ClassNotFoundException e) {
-				Activator.getDefault().logException(e);
+				CoreActivator.getDefault().logException(e);
 			} catch (MalformedURLException e) {
-				Activator.getDefault().logException(e);
+				CoreActivator.getDefault().logException(e);
 			}
 		} else {
-			Activator.getDefault().log(pbase.getId() + " not found!");
+			CoreActivator.getDefault().log(pbase.getId() + " not found!");
 
 		}
 		return cl;
@@ -221,7 +221,7 @@ public enum XPagesComponentProvider {
 		int nCounter = -1;
 		for (XDELibrary lib : listRC) {
 			nCounter++;
-			if (depID.equals(lib.getLib().getLibraryId())) {
+			if (depID.equals(lib.getLibraryID())) {
 				return nCounter;
 			}
 		}
@@ -231,18 +231,20 @@ public enum XPagesComponentProvider {
 
 	private Set<String> getDependencies(XDELibrary lib, Set<String> full, List<XDELibrary> libraries) {
 		Set<String> eList = Collections.emptySet();
-		if (lib.getLib().getDependencies() == null) {
+		XspLibrary xspLib = xspLibraryMap.get(lib.getLibraryID());
+
+		if (xspLib.getDependencies() == null) {
 			return eList;
 		}
-		List<String> lstDep = Arrays.asList(lib.getLib().getDependencies());
+		List<String> lstDep = Arrays.asList(xspLib.getDependencies());
 		for (String depID : lstDep) {
 			XDELibrary libNew = getLibraryByID(depID, libraries);
 			if (libNew == null) {
 				// System.out.println("!!!! " + depID + "not found!");
 
 			} else {
-				if (!full.contains(libNew.getLib().getLibraryId())) {
-					full.add(libNew.getLib().getLibraryId());
+				if (!full.contains(libNew.getLibraryID())) {
+					full.add(libNew.getLibraryID());
 					Set<String> ids = getDependencies(libNew, full, libraries);
 					full.addAll(ids);
 				}
@@ -254,7 +256,7 @@ public enum XPagesComponentProvider {
 
 	private XDELibrary getLibraryByID(String depID, List<XDELibrary> libraries) {
 		for (XDELibrary lib : libraries) {
-			if (depID.equals(lib.getLib().getLibraryId())) {
+			if (depID.equals(lib.getLibraryID())) {
 				return lib;
 			}
 		}
@@ -271,7 +273,7 @@ public enum XPagesComponentProvider {
 		// state)
 		reg.createProject(id);
 		for (XDELibrary library : m_Libraries) {
-			XspLibrary lib = library.getLib();
+			XspLibrary lib = xspLibraryMap.get(library.getLibraryID());
 			SimpleRegistryProvider provider = new SimpleRegistryProvider();
 			provider.init(new LibraryWrapper(lib.getLibraryId(), lib));
 			checkManager(provider);
