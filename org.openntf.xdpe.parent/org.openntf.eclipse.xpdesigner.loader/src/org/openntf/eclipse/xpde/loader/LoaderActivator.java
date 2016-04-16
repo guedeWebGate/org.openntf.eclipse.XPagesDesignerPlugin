@@ -1,9 +1,7 @@
-package org.openntf.eclipse.xpdesigner.ui.projectwizard;
+package org.openntf.eclipse.xpde.loader;
 
-import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -11,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.pde.core.target.ITargetDefinition;
 import org.eclipse.pde.core.target.ITargetHandle;
 import org.eclipse.pde.core.target.ITargetPlatformService;
@@ -21,57 +18,44 @@ import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 import org.osgi.framework.FrameworkEvent;
 import org.osgi.framework.FrameworkListener;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.packageadmin.PackageAdmin;
+import org.osgi.framework.wiring.FrameworkWiring;
 
-/**
- * The activator class controls the plug-in life cycle
- */
-@SuppressWarnings("deprecation")
-public class Activator extends AbstractUIPlugin {
+public class LoaderActivator implements BundleActivator {
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "org.openntf.eclipse.xpdesigner.ui.projectwizard"; //$NON-NLS-1$
+	private static LoaderActivator plugin;
 
-	// The shared instance
-	private static Activator plugin;
-
-	// Consol Log
+	private BundleContext context;
 	private MessageConsoleStream consoleLog;
-	private String tempDir;
+	private Bundle ibmCoreBundle;
 
-	/**
-	 * The constructor
-	 */
-	public Activator() {
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.
-	 * BundleContext)
-	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
-		super.start(context);
+		this.context = context;
 		plugin = this;
 		MessageConsole console = findConsole("XDPE -Console");
 		consoleLog = console.newMessageStream();
-		tempDir = getTempSubDir();
-		//bundleInstall(context);
+		// bundleInstall(context);
+		/*for (String message : Startup.getStartup().getLogMessages()) {
+			log(message);
+		}
+		*/
+	}
+
+	@Override
+	public void stop(BundleContext context) throws Exception {
+		consoleLog.close();
 
 	}
 
 	private void bundleInstall(BundleContext context) {
-		List<String> pluginIds = Arrays.asList("com.ibm.designer.lib.acf",
-		"com.ibm.designer.lib.jsf",
-		"com.ibm.pvc.servlet",
-		"com.ibm.xsp.core");
+		List<String> pluginIds = Arrays.asList("com.ibm.designer.lib.acf", "com.ibm.designer.lib.jsf", "com.ibm.pvc.servlet", "com.ibm.xsp.core");
 		log("Start bundleInstaller: " + new Date());
 		// IPluginModelBase[] base = PluginRegistry.getActiveModels(false);
 		ITargetDefinition activeTargetDefinition = getActiveTargetDefinition();
@@ -113,21 +97,29 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public void refreshPackages(List<Bundle> bundles, BundleContext context) {
-		ServiceReference<?> packageAdminRef = context.getServiceReference(PackageAdmin.class.getName());
-		PackageAdmin packageAdmin = null;
-		if (packageAdminRef != null) {
-			packageAdmin = (PackageAdmin) context.getService(packageAdminRef);
-			if (packageAdmin == null) {
-				return;
+		Bundle systemBundle = context.getBundle(0);
+		Bundle myBundle = context.getBundle();
+		// Bundle xdpeCore = null;
+		for (Bundle bndl : bundles) {
+			if ("com.ibm.xsp.core".equals(bndl.getSymbolicName())) {
+				log("Starting: " + bndl);
+				try {
+					ibmCoreBundle = bndl;
+					bndl.start();
+				} catch (BundleException e) {
+					logException(e);
+				}
 			}
 		}
-
+		// xdpeCore = context.getBundle("org.openntf.eclipse.xpdesigner.core");
+		log("MyBundle is:  " + myBundle);
 		final boolean[] flag = new boolean[] { false };
 		FrameworkListener listener = new FrameworkListener() {
 			@Override
 			public void frameworkEvent(FrameworkEvent event) {
 				if (event.getType() == FrameworkEvent.PACKAGES_REFRESHED) {
 					synchronized (flag) {
+						log("DOING REFRESH: " + event.toString());
 						flag[0] = true;
 						flag.notifyAll();
 					}
@@ -135,8 +127,8 @@ public class Activator extends AbstractUIPlugin {
 			}
 		};
 		context.addFrameworkListener(listener);
-
-		packageAdmin.refreshPackages(bundles.toArray(new Bundle[bundles.size()]));
+		FrameworkWiring frameworkWiring = systemBundle.adapt(FrameworkWiring.class);
+		frameworkWiring.refreshBundles(null);
 		synchronized (flag) {
 			while (!flag[0]) {
 				try {
@@ -145,30 +137,24 @@ public class Activator extends AbstractUIPlugin {
 				}
 			}
 		}
-		packageAdmin.resolveBundles(bundles.toArray(new Bundle[bundles.size()]));
+		if (myBundle != null) {
+			frameworkWiring.resolveBundles(Arrays.asList(myBundle));
+		}
 		context.removeFrameworkListener(listener);
-		context.ungetService(packageAdminRef);
-	}
+		log("Refresh done...");
+		try {
+			Class<?> cl = ibmCoreBundle.loadClass("com.ibm.xsp.library.XspLibrary");
+			log("Class is " + cl);
+			log("Try to load com.ibm.xsp.registry.FacesRegistry");
+			Class<?> clReg = ibmCoreBundle.loadClass("com.ibm.xsp.registry.FacesRegistry");
+			log("Reg is " + clReg);
+			log("Try to load class from MyBundle Core");
+			Class<?> clCoreXSP = myBundle.loadClass("com.ibm.xsp.library.XspLibrary");
+			log("Class is " + clCoreXSP);
 
-	private String getTempSubDir() {
-		SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddHHmmss");
-		String subDir = "XDPE_" + sdf.format(new Date());
-		String path = System.getProperty("java.io.tmpdir") + File.separator + subDir;
-		File tempDir = new File(path);
-		tempDir.mkdirs();
-		return path;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.
-	 * BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		consoleLog.close();
-		plugin = null;
-		super.stop(context);
+		} catch (Exception ex) {
+			logException(ex);
+		}
 
 	}
 
@@ -177,7 +163,7 @@ public class Activator extends AbstractUIPlugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static Activator getDefault() {
+	public static LoaderActivator getDefault() {
 		return plugin;
 	}
 
@@ -195,7 +181,7 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public void log(String message) {
-		consoleLog.println(message);
+		consoleLog.println(">>LOADER: " + message);
 	}
 
 	public void logException(Exception ex) {
@@ -203,13 +189,6 @@ public class Activator extends AbstractUIPlugin {
 		PrintWriter pw = new PrintWriter(sw);
 		ex.printStackTrace(pw);
 		log(sw.toString());
-	}
-
-	public String getNewTempSubDir(String subDir) {
-		String path = tempDir + File.separator + subDir;
-		File tempDir = new File(path);
-		tempDir.mkdirs();
-		return path;
 	}
 
 	private List<TargetBundle> collectTargetBundles(ITargetDefinition activeTargetDefinition, Set<String> dependecies) {
@@ -224,7 +203,7 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	private ITargetDefinition getActiveTargetDefinition() {
-		BundleContext bc = getBundle().getBundleContext();
+		BundleContext bc = context;
 		ServiceReference<ITargetPlatformService> ref = bc.getServiceReference(ITargetPlatformService.class);
 
 		ITargetPlatformService tpService = bc.getService(ref);
@@ -240,6 +219,14 @@ public class Activator extends AbstractUIPlugin {
 		}
 		return targetDef;
 
+	}
+
+	public Bundle getIbmCoreBundle() {
+		return ibmCoreBundle;
+	}
+
+	public void setIbmCoreBundle(Bundle ibmCoreBundle) {
+		this.ibmCoreBundle = ibmCoreBundle;
 	}
 
 }

@@ -13,7 +13,6 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.openntf.eclipse.xpdesigner.core.compiler.XSPClass;
-import org.openntf.eclipse.xpdesigner.core.compiler.XSPClassBuilder;
 import org.openntf.eclipse.xpdesigner.ui.natures.ProjectNature;
 import org.openntf.eclipse.xpdesigner.ui.projectwizard.Activator;
 import org.openntf.eclipse.xpdesigner.ui.projectwizard.XSPFileBuilder;
@@ -48,11 +47,11 @@ public class XSPBuilder extends IncrementalProjectBuilder {
 			if (resource instanceof IFile) {
 				IFile file = (IFile) resource;
 				if (file.getParent() instanceof IFolder && "xsp".equals(file.getFileExtension())) {
-					System.out.println("BINGO....");
+					Activator.getDefault().log("Und los gehts");
 					try {
 						compileFile(file);
 					} catch (Exception ex) {
-						ex.printStackTrace();
+						Activator.getDefault().logException(ex);
 					}
 					return true;
 				}
@@ -97,21 +96,15 @@ public class XSPBuilder extends IncrementalProjectBuilder {
 
 	}
 
-	private void compileFile(IFile file) throws CoreException, IOException {
+	private void compileFile(IFile file) throws Exception {
 
 		CoreActivator.getDefault().log("Ready to use XSPClassBuilder!");
-		XSPClass xspClass=XDECommandWrapper.INSTANCE.compileFile(file);
+		XSPClass xspClass = XDECommandWrapper.INSTANCE.compileFile(file);
 		if (xspClass == null) {
 			Activator.getDefault().log("No xspClass build for " + file);
+		} else {
+			IFile javaFile = XSPFileBuilder.INSTANCE.createJavaFileForXSP(getProject(), xspClass.getName(), xspClass.getCode());
 		}
-		IFile javaFile = XSPFileBuilder.INSTANCE.createJavaFileForXSP(getProject(), xspClass.getName(), xspClass.getCode());
-		/*
-		XSPClass xspClass = XDPEComponentProvider.getInstance().compileFile(file);
-		if (xspClass == null) {
-			Activator.getDefault().log("No xspClass build for " + file);
-		}
-		IFile javaFile = XSPFileBuilder.INSTANCE.createJavaFileForXSP(getProject(), xspClass.getName(), xspClass.getCode());
-		*/
 	}
 
 }

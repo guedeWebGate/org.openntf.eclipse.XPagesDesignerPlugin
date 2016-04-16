@@ -13,11 +13,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.service.resolver.BundleSpecification;
 import org.eclipse.pde.core.plugin.IPluginBase;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.core.plugin.PluginRegistry;
 import org.eclipse.pde.core.target.ITargetDefinition;
+import org.eclipse.pde.core.target.ITargetHandle;
+import org.eclipse.pde.core.target.ITargetPlatformService;
 import org.eclipse.pde.core.target.TargetBundle;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
@@ -26,7 +29,13 @@ import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.openntf.eclipse.xpdesigner.core.loaders.TargetBundleClassLoader;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkEvent;
+import org.osgi.framework.FrameworkListener;
+import org.osgi.framework.ServiceReference;
+import org.osgi.framework.wiring.FrameworkWiring;
+import org.osgi.service.packageadmin.PackageAdmin;
 
 public class CoreActivator extends AbstractUIPlugin {
 
@@ -47,8 +56,7 @@ public class CoreActivator extends AbstractUIPlugin {
 		MessageConsole console = findConsole("XDPE -Console Core");
 		consoleLog = console.newMessageStream();
 		tempDir = getTempSubDir();
-
-
+		//bundleInstall(arg0);
 	}
 
 	@Override
@@ -174,6 +182,179 @@ public class CoreActivator extends AbstractUIPlugin {
 				depend.add(name);
 			}
 		}
+	}
+	
+	private void bundleInstall(BundleContext context) {
+		
+		List<String> pluginIds = Arrays.asList("com.ibm.designer.lib.acf",
+		"com.ibm.designer.lib.jsf",
+		"com.ibm.pvc.servlet",
+		"com.ibm.xsp.core");
+		//List<String> pluginIds = Arrays.asList("com.ibm.xsp.core", "com.ibm.xsp.designer", "com.ibm.pvc.servlet", "com.ibm.xsp.extsn", "com.ibm.designer.lib.jsf", "com.ibm.jscript",
+		//		"com.ibm.designer.lib.acf", "com.ibm.designer.runtime.directory", "com.ibm.notes.java.init", "com.ibm.notes.java.api", "com.ibm.designer.runtime", "com.ibm.commons.jdbc");
+		log("Start bundleInstaller: " + new Date());
+		// IPluginModelBase[] base = PluginRegistry.getActiveModels(false);
+		ITargetDefinition activeTargetDefinition = getActiveTargetDefinition();
+		if (activeTargetDefinition == null) {
+			log("TargetPlatform is not defined!");
+			return;
+		}
+		Set<String> allDependencies = new HashSet<String>();
+		/*
+		 * for (IPluginModelBase element : base) { IPluginBase pbase =
+		 * element.getPluginBase(); if (pluginIds.contains(pbase.getId())) {
+		 * log("Loading Dependencies for " + pbase.getId()); Set<String>
+		 * dependecies = buildDependencies(pbase.getPluginModel(),
+		 * pbase.getId()); allDependencies.addAll(dependecies); } }
+		 */
+		for (String id : pluginIds) {
+			allDependencies.add(id);
+		}
+		if (!activeTargetDefinition.isResolved()) {
+			activeTargetDefinition.resolve(null);
+		}
+		List<TargetBundle> tBundles = collectTargetBundles(activeTargetDefinition, allDependencies);
+		List<Bundle> loadedBundle = new ArrayList<Bundle>();
+		for (TargetBundle bundle : tBundles) {
+			try {
+
+				Bundle bndl = context.installBundle(bundle.getBundleInfo().getLocation().toString());
+				if (bndl.getState() == Bundle.INSTALLED) {
+					loadedBundle.add(bndl);
+				} else {
+					log("ERROR: " + bndl.getSymbolicName() + " - STATE: " + bndl.getState() + " / " + Bundle.INSTALLED);
+				}
+			} catch (Exception e) {
+				logException(e);
+			}
+		}
+
+		refreshTotal(context.getBundle(0));
+		//refreshPackages(loadedBundle, context);
+	}
+	
+	public void refreshTotal(Bundle systemBundle) {
+		final boolean[] flag = new boolean[] { false };
+		FrameworkListener listener = new FrameworkListener() {
+			@Override
+			public void frameworkEvent(FrameworkEvent event) {
+				if (event.getType() == FrameworkEvent.PACKAGES_REFRESHED) {
+					synchronized (flag) {
+						log("DOING REFRESH: "+event.toString());
+						flag[0] = true;
+						flag.notifyAll();
+					}
+				}
+			}
+		};
+		context.addFrameworkListener(listener);
+		FrameworkWiring frameworkWiring = systemBundle.adapt(FrameworkWiring.class);
+		frameworkWiring.refreshBundles(null);
+		synchronized (flag) {
+			while (!flag[0]) {
+				try {
+					flag.wait();
+				} catch (InterruptedException e) {
+				}
+			}
+		}
+		frameworkWiring.resolveBundles(Arrays.asList(context.getBundle()));
+		try {
+			Class<?> libCls = context.getBundle().loadClass("com.ibm.xsp.library.XspLibrary");
+			log("2nd Try Lib class is " + libCls);
+		} catch (Exception ex) {
+			logException(ex);
+		}
+		log("Refresh done...");
+	}
+
+	public void refreshPackages(List<Bundle> bundles, BundleContext context) {
+		ServiceReference<?> packageAdminRef = context.getServiceReference(PackageAdmin.class.getName());
+		PackageAdmin packageAdmin = null;
+		if (packageAdminRef != null) {
+			packageAdmin = (PackageAdmin) context.getService(packageAdminRef);
+			if (packageAdmin == null) {
+				return;
+			}
+		}
+
+		final boolean[] flag = new boolean[] { false };
+		FrameworkListener listener = new FrameworkListener() {
+			@Override
+			public void frameworkEvent(FrameworkEvent event) {
+				if (event.getType() == FrameworkEvent.PACKAGES_REFRESHED) {
+					synchronized (flag) {
+						log("DOING REFRESH: "+event.toString());
+						flag[0] = true;
+						flag.notifyAll();
+					}
+				}
+			}
+		};
+		context.addFrameworkListener(listener);
+
+		Bundle core = Platform.getBundle("org.openntf.eclipse.xpdesigner.core");
+		try {
+			log("CORE STATE: " + core.getState() + " / Active would be= " + Bundle.ACTIVE);
+		} catch (Exception ex) {
+			logException(ex);
+		}
+		Bundle core2 = Platform.getBundle("org.eclipse.core.resources");
+		// bundles.add(core);
+		bundles.add(core2);
+		packageAdmin.refreshPackages(bundles.toArray(new Bundle[bundles.size()]));
+		synchronized (flag) {
+			while (!flag[0]) {
+				try {
+					flag.wait();
+				} catch (InterruptedException e) {
+				}
+			}
+		}
+		try {
+			log("CORE STATE after REFRESH: " + core.getState() + " / Active would be= " + Bundle.ACTIVE);
+		} catch (Exception ex) {
+			logException(ex);
+		}
+		packageAdmin.resolveBundles(new Bundle[] { core });
+		try {
+			log("CORE STATE after Resolve: " + core.getState() + " / Active would be= " + Bundle.ACTIVE);
+		} catch (Exception ex) {
+			logException(ex);
+		}
+		context.removeFrameworkListener(listener);
+		context.ungetService(packageAdminRef);
+		try {
+			Class<?> libCls = core.loadClass("com.ibm.xsp.library.XspLibrary");
+			log("2nd Try Lib class is " + libCls);
+		} catch (Exception ex) {
+			logException(ex);
+		}
+		try {
+			log("CORE STATE after Access: " + core.getState() + " / Active would be= " + Bundle.ACTIVE);
+		} catch (Exception ex) {
+			logException(ex);
+		}
+
+	}
+	
+	private ITargetDefinition getActiveTargetDefinition() {
+		BundleContext bc = getBundle().getBundleContext();
+		ServiceReference<ITargetPlatformService> ref = bc.getServiceReference(ITargetPlatformService.class);
+
+		ITargetPlatformService tpService = bc.getService(ref);
+		ITargetDefinition targetDef = null;
+		try {
+			for (ITargetHandle def : tpService.getTargets(null)) {
+				if ("XPDE-Server".equals(def.getTargetDefinition().getName())) {
+					targetDef = def.getTargetDefinition();
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return targetDef;
+
 	}
 
 

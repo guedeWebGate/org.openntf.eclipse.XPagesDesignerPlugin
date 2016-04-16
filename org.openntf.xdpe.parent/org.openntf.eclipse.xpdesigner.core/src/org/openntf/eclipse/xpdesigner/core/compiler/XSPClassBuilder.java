@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.openntf.eclipse.xpdesigner.core.CoreActivator;
 import org.openntf.eclipse.xpdesigner.core.XPagesComponentProvider;
 
 import com.ibm.xsp.FacesExceptionEx;
@@ -24,7 +25,8 @@ public class XSPClassBuilder {
 
 
 
-	public XSPClass compileFile(Object ofile) throws CoreException, IOException, FacesExceptionEx {
+	public XSPClass compileFile(IFile file) throws CoreException, IOException, FacesExceptionEx {
+		CoreActivator.getDefault().log("Starting compileFile");
 		FacesSharableRegistry reg = XPagesComponentProvider.INSTANCE.getRegistry();
 		Map<String, Object> options = new HashMap<String, Object>();
 		// allowNamespacedMarkupTags defaults to true in FacesDeserializer
@@ -32,7 +34,6 @@ public class XSPClassBuilder {
 		options.put(FacesDeserializer.OPTION_ALLOW_NAMESPACED_MARKUP_TAGS, true);
 		FacesDeserializer deserial = new FacesDeserializer(reg, options);
 		ComponentElement root;
-		IFile file = (IFile)ofile;
 		try {
 			InputStream in = file.getContents();
 			try {
@@ -47,7 +48,7 @@ public class XSPClassBuilder {
 				throw new RuntimeException("Unable to deserialize the file : " + file.getName());
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			CoreActivator.getDefault().logException(ex);
 			return null;
 		}
 		Map<String, Object> options2 = new HashMap<String, Object>();
@@ -61,6 +62,8 @@ public class XSPClassBuilder {
 
 		// generate the .java class
 		String code = compiler.translate(logical);
+		CoreActivator.getDefault().log("Code: "+ code);
+
 		XSPClass xspClass = new XSPClass(className, code);
 		return xspClass;
 

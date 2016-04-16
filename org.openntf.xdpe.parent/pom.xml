@@ -336,5 +336,6 @@
 	</profiles>
 	<modules>
 	<module>org.openntf.eclipse.xpdesigner.core</module>
+	<module>org.openntf.eclipse.xpdesigner.loader</module>
 	</modules>
 </project>

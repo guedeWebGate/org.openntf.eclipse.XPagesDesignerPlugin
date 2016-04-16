@@ -1,14 +1,18 @@
 package org.openntf.eclipse.xpdesigner.core.xdecomponents;
 
+import com.ibm.xsp.library.XspLibrary;
+
 public class XDELibrary {
 	private final String className;
 	private final String pluginID;
 	private final String libraryID;
-	
-	public XDELibrary(String pluginID, String className,String libraryID) {
+	private final XspLibrary library;
+
+	public XDELibrary(String pluginID, String className, XspLibrary library) {
 		this.className = className;
 		this.pluginID = pluginID;
-		this.libraryID = libraryID;
+		this.libraryID = library.getLibraryId();
+		this.library = library;
 	}
 
 	public String getClassName() {
@@ -22,6 +26,9 @@ public class XDELibrary {
 	public String getLibraryID() {
 		return libraryID;
 	}
-	
-	
+
+	public XspLibrary getLibrary() {
+		return library;
+	}
+
 }
