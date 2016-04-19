@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.openntf.eclipse.xpdesigner.feature_1.0.0.qualifier.jar" id="org.openntf.eclipse.xpdesigner.feature" version="1.0.0.qualifier">
+      <category name="OpenNTF-XDPE"/>
+   </feature>
+   <category-def name="OpenNTF-XDPE" label="XPages Designer Plugin 4 XPages"/>
+</site>
