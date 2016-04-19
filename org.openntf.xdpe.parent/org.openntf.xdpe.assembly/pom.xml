@@ -49,7 +49,7 @@
 						<configuration>
 							<target>
 								<delete dir="${kit.workingDir}/sources" />
-								<delete dir="${kit.parentDir}/${kit.result}"/>
+								<delete dir="${kit.parentDir}/../${kit.result}"/>
 							</target>
 						</configuration>
 						<goals><goal>run</goal></goals>
@@ -87,7 +87,7 @@
 						<phase>install</phase>
 						<configuration>
 							<target>
-								<copy todir="${kit.parentDir}/${kit.result}">
+								<copy todir="${kit.parentDir}/../${kit.result}">
     								<fileset dir="${kit.finalAssemblyFolder}">
     								</fileset>
 								</copy>
