@@ -12,16 +12,18 @@
 		<compiler>1.6</compiler>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
-		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
 		<sonar.language>java</sonar.language>
 		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+		<sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
+		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
 		<kit.buildVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}-SNAPSHOT</kit.buildVersion>
 		<p2.buildVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</p2.buildVersion>
 		<kit.result>snapshots</kit.result>
-		<sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
+		<kit.sourceCodeUrl>https://stash.openntf.org/plugins/servlet/archive/projects/xdpw/repos/openntfwf?at=refs%2Fheads%2F</kit.sourceCodeUrl>
+		<kit.sourceBranch>develop</kit.sourceBranch>
 	</properties>
 
 	<repositories>
@@ -316,9 +318,12 @@
 				<module>org.openntf.eclipse.xdpe.publisher</module>
 				<module>org.openntf.eclipse.xdpe.publisher.feature</module>
 				<module>org.openntf.eclipse.xdpe.publisher.p2</module>
+				<module>org.openntf.eclipse.xpdesigner.core</module>
+				<module>org.openntf.eclipse.xpdesigner.loader</module>
 				<module>org.openntf.eclipse.xpdesigner.ui.projectwizard</module>
 				<module>org.openntf.eclipse.xpdesigner.feature</module>
 				<module>org.openntf.eclipse.xpdesigner.p2</module>
+				<module>org.openntf.xdpe.assembly</module>
 			</modules>
 		</profile>
 		<profile>
@@ -327,15 +332,16 @@
 				<module>org.openntf.eclipse.xdpe.publisher</module>
 				<module>org.openntf.eclipse.xdpe.publisher.feature</module>
 				<module>org.openntf.eclipse.xdpe.publisher.p2</module>
+				<module>org.openntf.eclipse.xpdesigner.core</module>
+				<module>org.openntf.eclipse.xpdesigner.loader</module>
 				<module>org.openntf.eclipse.xpdesigner.ui.projectwizard</module>
 				<module>org.openntf.eclipse.xpdesigner.feature</module>
 				<module>org.openntf.eclipse.xpdesigner.p2</module>
 				<module>org.openntf.eclipse.xpdesigner.ui.pw-tests</module>
+				<module>org.openntf.xdpe.assembly</module>
 			</modules>
 		</profile>
 	</profiles>
 	<modules>
-	<module>org.openntf.eclipse.xpdesigner.core</module>
-	<module>org.openntf.eclipse.xpdesigner.loader</module>
 	</modules>
 </project>

@@ -40,3 +40,9 @@ org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.core/.settings/org.eclips
 org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.core/.settings/
 org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.core/target/org.openntf.eclipse.xpdesigner.core-1.0.0-SNAPSHOT-sources.jar
 org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.core/target/
+org.openntf.xdpe.parent/org.openntf.eclipse.xpdesigner.loader/target/
+org.openntf.xdpe.parent/org.openntf.xdpe.assembly/.project
+org.openntf.xdpe.parent/org.openntf.xdpe.assembly/.settings/org.eclipse.core.resources.prefs
+org.openntf.xdpe.parent/org.openntf.xdpe.assembly/.settings/
+org.openntf.xdpe.parent/org.openntf.xdpe.assembly/target/
+org.openntf.xdpe.parent/snapshots/

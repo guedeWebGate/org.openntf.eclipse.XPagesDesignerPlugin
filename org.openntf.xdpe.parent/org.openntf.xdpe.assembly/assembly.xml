@@ -1,0 +1,61 @@
+<assembly
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+	<id>default</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<baseDirectory>target</baseDirectory>
+	<includeBaseDirectory>false</includeBaseDirectory>
+
+
+
+
+	<fileSets>
+		<fileSet>
+			<directory>${project.build.directory}/sources</directory>
+			<includes>
+				<include>org.openntf.xpde*</include>
+			</includes>
+			<outputDirectory>/</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../</directory>
+			<includes>
+				<include>*.txt</include>
+				<include>LICENSE</include>
+			</includes>
+			<outputDirectory></outputDirectory>
+		</fileSet>
+
+		<fileSet>
+			<directory>../org.openntf.eclipse.xdpe.publisher.p2/target</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>org.openntf.eclipse*</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>../org.openntf.eclipse.xpdesigner.p2/target</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>org.openntf.eclipse*</include>
+			</includes>
+		</fileSet>
+			</fileSets>
+	<moduleSets>
+		<moduleSet>
+			<useAllReactorProjects>true</useAllReactorProjects>
+			<includes>
+				<include>org.openntf.eclipse.xpde.publisher:org.opentntf.eclipse.xpdesigner.core:org.opentntf.eclipse.xpdesigner.loader:org.opentntf.eclipse.xpdesigner.ui.projectwizard</include>
+			</includes>
+			<binaries>
+				<attachmentClassifier>javadoc</attachmentClassifier>
+				<includeDependencies>false</includeDependencies>
+				<outputDirectory>/apidocs/${module.artifactId}</outputDirectory>
+				<unpack>true</unpack>
+			</binaries>
+		</moduleSet>
+	</moduleSets>
+</assembly>
