@@ -11,4 +11,5 @@
 	<packaging>eclipse-plugin</packaging>
 	<groupId>org.openntf.xdpe.parent</groupId>
 	<artifactId>org.openntf.eclipse.xdpe.publisher</artifactId>
+	<name>XDPE Publisher Plugin (Server Component)</name>
 </project>

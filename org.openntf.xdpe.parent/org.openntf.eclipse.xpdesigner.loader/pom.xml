@@ -7,5 +7,5 @@
   </parent>
   <artifactId>org.openntf.eclipse.xpdesigner.loader</artifactId>
   <packaging>eclipse-plugin</packaging>
-  <name>XPages Designer Plugin Pre Loader</name>
+  <name> XPages Designer Plugin 4 Eclipse Environment Loader</name>
 </project>

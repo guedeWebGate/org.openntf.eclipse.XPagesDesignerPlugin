@@ -1,4 +1,4 @@
-package org.openntf.eclipse.xpdesigner.ui.projectwizard;
+package org.openntf.eclipse.xpdesigner.core.definitions;
 
 import java.util.Properties;
 

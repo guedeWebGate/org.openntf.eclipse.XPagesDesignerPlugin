@@ -7,5 +7,5 @@
   </parent>
   <artifactId>org.openntf.eclipse.xdpe.publisher.p2</artifactId>
   <packaging>eclipse-repository</packaging>
-  <name>XDPE Publisher for Domino Server</name>
+  <name>XDPE Publisher P2 Repo (Server Component)</name>
 </project>

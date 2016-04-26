@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.openntf.eclipse.xpdesigner.ui.projectwizard.ServerDefinitionSupport;
+import org.openntf.eclipse.xpdesigner.core.definitions.ServerDefinitionSupport;
 import org.openntf.eclipse.xpdesigner.ui.projectwizard.XPagesProjectSupport;
 
 

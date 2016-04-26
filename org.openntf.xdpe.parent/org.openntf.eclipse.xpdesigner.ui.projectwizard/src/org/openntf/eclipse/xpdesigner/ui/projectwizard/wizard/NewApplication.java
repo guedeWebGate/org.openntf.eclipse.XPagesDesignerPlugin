@@ -5,7 +5,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.openntf.eclipse.xpdesigner.ui.projectwizard.ApplicationDefinitionSupport;
+import org.openntf.eclipse.xpdesigner.core.definitions.ApplicationDefinitionSupport;
 
 public class NewApplication extends Wizard implements INewWizard {
 

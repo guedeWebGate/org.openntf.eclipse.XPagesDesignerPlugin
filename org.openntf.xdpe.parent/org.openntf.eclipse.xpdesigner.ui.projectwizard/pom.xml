@@ -11,4 +11,5 @@
 	<packaging>eclipse-plugin</packaging>
 	<groupId>org.openntf.xdpe.parent</groupId>
 	<artifactId>org.openntf.eclipse.xpdesigner.ui.projectwizard</artifactId>
+	<name> XPages Designer Plugin 4 Eclipse UI Plugins</name>
 </project>

@@ -8,7 +8,7 @@
 	</parent>
   <artifactId>org.openntf.xdpe.assembly</artifactId>
   <packaging>pom</packaging>
-  <name>XPages Designer Plugin 4 Eclipse :: Packaging &amp; Assembly Line</name>
+  <name>XPages Designer Plugin 4 Eclipse Assembly Line</name>
   
   	<properties>
 		<kit.parentDir>${project.basedir}/../</kit.parentDir>

@@ -11,7 +11,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.openntf.eclipse.xpdesigner.ui.projectwizard.ServerDefinitionSupport;
+import org.openntf.eclipse.xpdesigner.core.definitions.ServerDefinitionSupport;
 
 public class NewServerPageOne extends WizardPage {
 	private static final String REGEX_PATTERN_SERVERNAME = "^[A-Za-z0-9_]+$";

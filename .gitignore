@@ -47,3 +47,5 @@ org.openntf.xdpe.parent/org.openntf.xdpe.assembly/.settings/
 org.openntf.xdpe.parent/org.openntf.xdpe.assembly/target/
 org.openntf.xdpe.parent/snapshots/
 snapshots/
+org.openntf.eclipse.xdpe.publisher/.project
+org.openntf.eclipse.xdpe.publisher/bin/
