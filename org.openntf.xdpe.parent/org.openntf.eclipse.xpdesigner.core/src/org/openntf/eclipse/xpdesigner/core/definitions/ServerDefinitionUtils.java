@@ -2,6 +2,7 @@ package org.openntf.eclipse.xpdesigner.core.definitions;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.Properties;
 
@@ -13,6 +14,16 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
 public class ServerDefinitionUtils {
+
+	public static void saveDefinition2File(IDefinition definition, IFile file) throws IOException, CoreException {
+		Properties props = definition.getProperties();
+		saveProperties2File(props, file);
+	}
+
+	public static void loadDefinitionFromFile(IDefinition definition, IFile file) throws CoreException, IOException {
+		InputStream is = file.getContents();
+		definition.loadProperties(is);
+	}
 
 	public static void saveProperties2File(Properties props, IFile file) throws IOException, CoreException {
 		StringWriter sw = new StringWriter();
